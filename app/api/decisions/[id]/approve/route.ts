@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { updateDecision } from "@/lib/domain/decision/repository";
-import { resumeReviewFeedbackGraph } from "@/lib/workflows/review-feedback/graph";
+import { resumeDecisionReviewWorkflow } from "@/lib/services/decision-workflow";
 
 const approveRequestSchema = z.object({
-  threadId: z.string().min(1),
   note: z.string().optional()
 });
 
@@ -27,14 +26,17 @@ export async function POST(
       decidedAt: new Date()
     });
 
-    const workflow = await resumeReviewFeedbackGraph(payload.threadId, {
-      action: "approve",
-      note: payload.note
+    const workflow = await resumeDecisionReviewWorkflow({
+      decisionId: id,
+      ownerChoice: {
+        action: "approve",
+        note: payload.note
+      }
     });
 
     return NextResponse.json({
-      decision,
-      workflowState: workflow.state.values
+      decision: workflow.decision ?? decision,
+      workflowState: workflow.workflow.state.values
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

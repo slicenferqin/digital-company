@@ -75,4 +75,5 @@ export interface BriefingGraphDependencies {
   listBriefingsForCycle: typeof import("@/lib/domain/briefing/repository").listBriefingsForCycle;
   createBriefing: typeof import("@/lib/domain/briefing/repository").createBriefing;
   createDecision: typeof import("@/lib/domain/decision/repository").createDecision;
+  initializeDecisionReviewWorkflow: typeof import("@/lib/services/decision-workflow").initializeDecisionReviewWorkflow;
 }

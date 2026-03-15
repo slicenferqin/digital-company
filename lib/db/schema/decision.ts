@@ -17,6 +17,13 @@ export const decisionStatusEnum = pgEnum("decision_status", [
   "rejected",
   "superseded"
 ]);
+export const decisionWorkflowStatusEnum = pgEnum("decision_workflow_status", [
+  "not_started",
+  "awaiting_owner",
+  "resumed",
+  "completed",
+  "failed"
+]);
 
 export const decisions = pgTable("decisions", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -35,6 +42,11 @@ export const decisions = pgTable("decisions", {
   summary: text("summary"),
   contextMarkdown: text("context_markdown"),
   status: decisionStatusEnum("status").notNull().default("pending"),
+  workflowThreadId: text("workflow_thread_id"),
+  workflowName: text("workflow_name"),
+  workflowStatus: decisionWorkflowStatusEnum("workflow_status")
+    .notNull()
+    .default("not_started"),
   resolution: text("resolution"),
   resolutionPayload: jsonb("resolution_payload")
     .$type<Record<string, unknown>>()

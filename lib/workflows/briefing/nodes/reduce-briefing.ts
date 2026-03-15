@@ -94,6 +94,13 @@ export function createReduceBriefingNode(dependencies: BriefingGraphDependencies
         })
       : null;
 
+    if (linkedDecision) {
+      await dependencies.initializeDecisionReviewWorkflow({
+        decisionId: linkedDecision.id,
+        teamId: linkedDecision.teamId
+      });
+    }
+
     return {
       dedupeKey,
       briefing,

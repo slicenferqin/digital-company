@@ -38,6 +38,9 @@ describe("briefing graph", () => {
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([createdBriefing]);
     const createBriefing = vi.fn().mockResolvedValue(createdBriefing);
+    const initializeDecisionReviewWorkflow = vi.fn().mockResolvedValue({
+      threadId: "review-feedback:decision:decision_1"
+    });
     const createDecision = vi.fn().mockResolvedValue({
       id: "decision_1",
       teamId: "team_1",
@@ -49,6 +52,9 @@ describe("briefing graph", () => {
       summary: "秘书长已将高优先级风险或待决策事项升级为决策对象。",
       contextMarkdown: "关注：等待老板确认发布节奏",
       status: "pending" as const,
+      workflowThreadId: null,
+      workflowName: null,
+      workflowStatus: "not_started" as const,
       resolution: null,
       resolutionPayload: {},
       decidedAt: null,
@@ -59,7 +65,8 @@ describe("briefing graph", () => {
     const graph = buildBriefingGraph({
       listBriefingsForCycle,
       createBriefing,
-      createDecision
+      createDecision,
+      initializeDecisionReviewWorkflow
     });
 
     const input = {
@@ -93,6 +100,10 @@ describe("briefing graph", () => {
 
     expect(createBriefing).toHaveBeenCalledTimes(1);
     expect(createDecision).toHaveBeenCalledTimes(1);
+    expect(initializeDecisionReviewWorkflow).toHaveBeenCalledWith({
+      decisionId: "decision_1",
+      teamId: "team_1"
+    });
     expect(firstRun.deduped).toBe(false);
     expect(firstRun.linkedDecision?.id).toBe("decision_1");
 

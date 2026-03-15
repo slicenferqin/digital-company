@@ -16,7 +16,14 @@ import type {
 import { buildProductionGraph } from "@/lib/workflows/production/graph";
 import { buildResearchGraph } from "@/lib/workflows/research/graph";
 import { StubResearchProvider } from "@/lib/workflows/research/providers/stub";
-import { buildReviewFeedbackGraph, resumeReviewFeedbackGraph } from "@/lib/workflows/review-feedback/graph";
+import {
+  buildDecisionWorkflowThreadId,
+  resumeDecisionReviewWorkflow
+} from "@/lib/services/decision-workflow";
+import {
+  resumeReviewFeedbackGraph,
+  startReviewFeedbackGraph
+} from "@/lib/workflows/review-feedback/graph";
 import { bootstrapTeam } from "@/lib/services/team-bootstrap";
 
 type DemoSession = {
@@ -438,6 +445,9 @@ async function runDemoBootstrap(sessionId: string, threadId: string): Promise<De
         summary: input.summary ?? null,
         contextMarkdown: input.contextMarkdown ?? null,
         status: "pending",
+        workflowThreadId: null,
+        workflowName: null,
+        workflowStatus: "not_started",
         resolution: null,
         resolutionPayload: {},
         decidedAt: null,
@@ -446,10 +456,40 @@ async function runDemoBootstrap(sessionId: string, threadId: string): Promise<De
       };
       decisions.push(decision);
       return decision;
+    },
+    initializeDecisionReviewWorkflow: async ({ decisionId, teamId }) => {
+      const decision = decisions.find((item) => item.id === decisionId);
+
+      if (!decision) {
+        throw new Error(`Decision not found: ${decisionId}`);
+      }
+
+      const threadId = buildDecisionWorkflowThreadId(decisionId);
+      const workflow = await startReviewFeedbackGraph(
+        {
+          teamId,
+          decisionId
+        },
+        threadId,
+        {
+          getDecisionById: async (currentDecisionId) =>
+            decisions.find((item) => item.id === currentDecisionId) ?? null
+        }
+      );
+
+      decision.workflowThreadId = threadId;
+      decision.workflowName = "review-feedback";
+      decision.workflowStatus = "awaiting_owner";
+      decision.updatedAt = new Date();
+
+      return {
+        threadId,
+        workflow
+      };
     }
   });
 
-  const briefingResult = await briefingGraph.invoke({
+  await briefingGraph.invoke({
     teamId: bootstrapResult.team.id,
     cycleId: planningResult.cycle!.id,
     type: "daily",
@@ -475,25 +515,6 @@ async function runDemoBootstrap(sessionId: string, threadId: string): Promise<De
       }
     ]
   });
-
-  const reviewFeedbackGraph = buildReviewFeedbackGraph({
-    getDecisionById: async (decisionId) =>
-      decisions.find((item) => item.id === decisionId) ?? null
-  });
-
-  for await (const _chunk of await reviewFeedbackGraph.stream(
-    {
-      teamId: bootstrapResult.team.id,
-      decisionId: briefingResult.linkedDecision!.id
-    },
-    {
-      configurable: {
-        thread_id: threadId
-      }
-    }
-  )) {
-    void _chunk;
-  }
 
   return {
     sessionId,
@@ -558,17 +579,42 @@ export async function approvePhase0DemoDecision(sessionId: string) {
   decision.decidedAt = new Date();
   decision.updatedAt = new Date();
 
-  const workflow = await resumeReviewFeedbackGraph(
-    session.threadId,
-    {
+  const workflow = await resumeDecisionReviewWorkflow({
+    decisionId: decision.id,
+    ownerChoice: {
       action: "approve",
       note: "可以按建议节奏推进"
-    },
-    {
-      getDecisionById: async (decisionId) =>
-        session.decisions.find((item) => item.id === decisionId) ?? null
     }
-  );
+  }, {
+    getDecisionById: async (decisionId) =>
+      session.decisions.find((item) => item.id === decisionId) ?? null,
+    updateDecision: async (input) => {
+      const currentDecision = session.decisions.find((item) => item.id === input.decisionId);
+
+      if (!currentDecision) {
+        throw new Error(`Decision not found: ${input.decisionId}`);
+      }
+
+      if (input.status !== undefined) currentDecision.status = input.status;
+      if (input.workflowThreadId !== undefined) currentDecision.workflowThreadId = input.workflowThreadId;
+      if (input.workflowName !== undefined) currentDecision.workflowName = input.workflowName;
+      if (input.workflowStatus !== undefined) currentDecision.workflowStatus = input.workflowStatus;
+      if (input.resolution !== undefined) currentDecision.resolution = input.resolution;
+      if (input.resolutionPayload !== undefined) currentDecision.resolutionPayload = input.resolutionPayload;
+      if (input.decidedAt !== undefined) currentDecision.decidedAt = input.decidedAt;
+      currentDecision.updatedAt = new Date();
+
+      return currentDecision;
+    },
+    startReviewFeedbackGraph: async () => {
+      throw new Error("startReviewFeedbackGraph should not be called during resume");
+    },
+    resumeReviewFeedbackGraph: async (threadId, ownerChoice) =>
+      resumeReviewFeedbackGraph(threadId, ownerChoice, {
+        getDecisionById: async (decisionId: string) =>
+          session.decisions.find((item) => item.id === decisionId) ?? null
+      })
+  });
 
   session.status = "approved";
   store.set(sessionId, session);
@@ -576,7 +622,7 @@ export async function approvePhase0DemoDecision(sessionId: string) {
   return {
     sessionId,
     decision: session.decisions[0],
-    workflowState: workflow.state.values,
+    workflowState: workflow.workflow.state.values,
     status: session.status
   };
 }

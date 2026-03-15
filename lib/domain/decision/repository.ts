@@ -11,14 +11,17 @@ function mapDecision(row: typeof decisions.$inferSelect): Decision {
     teamId: row.teamId,
     cycleId: row.cycleId,
     relatedBriefingId: row.relatedBriefingId,
-    requestedByMemberId: row.requestedByMemberId,
-    type: row.type,
-    title: row.title,
-    summary: row.summary,
-    contextMarkdown: row.contextMarkdown,
-    status: row.status,
-    resolution: row.resolution,
-    resolutionPayload: row.resolutionPayload,
+  requestedByMemberId: row.requestedByMemberId,
+  type: row.type,
+  title: row.title,
+  summary: row.summary,
+  contextMarkdown: row.contextMarkdown,
+  status: row.status,
+  workflowThreadId: row.workflowThreadId,
+  workflowName: row.workflowName,
+  workflowStatus: row.workflowStatus,
+  resolution: row.resolution,
+  resolutionPayload: row.resolutionPayload,
     decidedAt: row.decidedAt,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt
@@ -36,7 +39,10 @@ export async function createDecision(input: CreateDecisionInput, database = getD
       type: input.type ?? "approval",
       title: input.title,
       summary: input.summary ?? null,
-      contextMarkdown: input.contextMarkdown ?? null
+      contextMarkdown: input.contextMarkdown ?? null,
+      workflowThreadId: input.workflowThreadId ?? null,
+      workflowName: input.workflowName ?? null,
+      workflowStatus: input.workflowStatus ?? "not_started"
     })
     .returning();
 
@@ -53,6 +59,9 @@ export async function updateDecision(input: UpdateDecisionInput, database = getD
     .update(decisions)
     .set({
       status: input.status,
+      workflowThreadId: input.workflowThreadId,
+      workflowName: input.workflowName,
+      workflowStatus: input.workflowStatus,
       resolution: input.resolution,
       resolutionPayload: input.resolutionPayload,
       decidedAt: input.decidedAt,

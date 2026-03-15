@@ -2,6 +2,7 @@ import { END, START, StateGraph } from "@langchain/langgraph";
 
 import { createBriefing, listBriefingsForCycle } from "@/lib/domain/briefing/repository";
 import { createDecision } from "@/lib/domain/decision/repository";
+import { initializeDecisionReviewWorkflow } from "@/lib/services/decision-workflow";
 
 import { mapTaskEvents } from "./nodes/map-task-events";
 import { createReduceBriefingNode } from "./nodes/reduce-briefing";
@@ -11,7 +12,8 @@ import { BriefingStateAnnotation } from "./state";
 const defaultDependencies: BriefingGraphDependencies = {
   listBriefingsForCycle,
   createBriefing,
-  createDecision
+  createDecision,
+  initializeDecisionReviewWorkflow
 };
 
 export function buildBriefingGraph(

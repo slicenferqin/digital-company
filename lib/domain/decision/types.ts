@@ -1,5 +1,11 @@
 export type DecisionType = "approval" | "priority" | "policy" | "publish" | "other";
 export type DecisionStatus = "pending" | "approved" | "rejected" | "superseded";
+export type DecisionWorkflowStatus =
+  | "not_started"
+  | "awaiting_owner"
+  | "resumed"
+  | "completed"
+  | "failed";
 
 export interface Decision {
   id: string;
@@ -12,6 +18,9 @@ export interface Decision {
   summary: string | null;
   contextMarkdown: string | null;
   status: DecisionStatus;
+  workflowThreadId: string | null;
+  workflowName: string | null;
+  workflowStatus: DecisionWorkflowStatus;
   resolution: string | null;
   resolutionPayload: Record<string, unknown>;
   decidedAt: Date | null;
@@ -28,11 +37,17 @@ export interface CreateDecisionInput {
   title: string;
   summary?: string;
   contextMarkdown?: string;
+  workflowThreadId?: string;
+  workflowName?: string;
+  workflowStatus?: DecisionWorkflowStatus;
 }
 
 export interface UpdateDecisionInput {
   decisionId: string;
   status?: DecisionStatus;
+  workflowThreadId?: string | null;
+  workflowName?: string | null;
+  workflowStatus?: DecisionWorkflowStatus;
   resolution?: string;
   resolutionPayload?: Record<string, unknown>;
   decidedAt?: Date;
