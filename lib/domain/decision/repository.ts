@@ -1,0 +1,60 @@
+import { eq } from "drizzle-orm";
+
+import { getDatabase } from "@/lib/db/client";
+import { decisions } from "@/lib/db/schema";
+
+import type { CreateDecisionInput, Decision, UpdateDecisionInput } from "./types";
+
+function mapDecision(row: typeof decisions.$inferSelect): Decision {
+  return {
+    id: row.id,
+    teamId: row.teamId,
+    cycleId: row.cycleId,
+    relatedBriefingId: row.relatedBriefingId,
+    requestedByMemberId: row.requestedByMemberId,
+    type: row.type,
+    title: row.title,
+    summary: row.summary,
+    contextMarkdown: row.contextMarkdown,
+    status: row.status,
+    resolution: row.resolution,
+    resolutionPayload: row.resolutionPayload,
+    decidedAt: row.decidedAt,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt
+  };
+}
+
+export async function createDecision(input: CreateDecisionInput, database = getDatabase()) {
+  const [row] = await database
+    .insert(decisions)
+    .values({
+      teamId: input.teamId,
+      cycleId: input.cycleId ?? null,
+      relatedBriefingId: input.relatedBriefingId ?? null,
+      requestedByMemberId: input.requestedByMemberId ?? null,
+      type: input.type ?? "approval",
+      title: input.title,
+      summary: input.summary ?? null,
+      contextMarkdown: input.contextMarkdown ?? null
+    })
+    .returning();
+
+  return mapDecision(row);
+}
+
+export async function updateDecision(input: UpdateDecisionInput, database = getDatabase()) {
+  const [row] = await database
+    .update(decisions)
+    .set({
+      status: input.status,
+      resolution: input.resolution,
+      resolutionPayload: input.resolutionPayload,
+      decidedAt: input.decidedAt,
+      updatedAt: new Date()
+    })
+    .where(eq(decisions.id, input.decisionId))
+    .returning();
+
+  return row ? mapDecision(row) : null;
+}

@@ -13,6 +13,7 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.40",
     "@langchain/langgraph": "^0.2.0",
     "drizzle-orm": "^0.36.0",
     "inngest": "^3.31.0",
