@@ -1,3 +1,5 @@
+import { Phase0DemoClient } from "./phase0-demo-client";
+
 const priorities = [
   "先看秘书长简报，确认本周期真正需要你介入的两件事。",
   "再处理一条主线决策，让团队继续推进而不是卡在过程里。",
@@ -123,6 +125,8 @@ export default function HomePage() {
             </div>
           </section>
         </div>
+
+        <Phase0DemoClient />
       </section>
     </main>
   );

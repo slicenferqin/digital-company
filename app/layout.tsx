@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Digital Company",
+  title: "Digital Company · Phase 0 Demo",
   description:
-    "A persistent digital content growth team product for business owners."
+    "一个面向业务 owner 的持续运转型数字内容增长团队产品原型。"
 };
 
 export default function RootLayout({

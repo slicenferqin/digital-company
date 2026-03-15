@@ -285,6 +285,62 @@ button {
   gap: 20px;
 }
 
+.demoPanel {
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+}
+
+.demoHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.demoCopy {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+.demoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.demoPlaceholder,
+.demoError {
+  border-radius: var(--radius-md);
+  padding: 16px;
+  border: 1px dashed var(--line);
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.demoError {
+  color: #9f1239;
+  border-color: rgba(159, 18, 57, 0.24);
+  background: rgba(255, 241, 242, 0.7);
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusPending {
+  background: rgba(37, 99, 235, 0.1);
+  color: #1d4ed8;
+}
+
 .panel {
   padding: 24px;
 }
@@ -359,6 +415,12 @@ button {
   .contentGrid {
     grid-template-columns: 1fr;
     flex-direction: column;
+  }
+
+  .demoHeader,
+  .demoGrid {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }
 
