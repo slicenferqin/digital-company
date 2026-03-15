@@ -1,182 +1,276 @@
+[中文](README.md) | [English](README.en.md)
+
 # Digital Company
 
-> Persistent AI content and growth teams that actually deliver.
+> 持续交付的数字内容增长团队，而不是一次性 agent workflow。
 
 ![Digital Company workbench preview](docs/ui/2026-03-11-boss-workbench-hi-fi-preview.png)
 
-`Digital Company` is not a one-off multi-agent workflow.
+`Digital Company` 不是一个“调用一组 agent 干完一次活”的工具。
 
-It is a persistent digital team product for business owners who need a low-cost team that can keep shipping week after week.
+它是一个面向业务 owner 的产品：你接手的不是临时拼出来的 agent team，而是一支会持续运转、持续记忆、持续协作、持续交付的数字小团队。
 
-The first version is intentionally narrow:
+第一版的边界刻意收窄为：
 
-## A persistent digital content growth team
+## 一支持续运转的数字内容增长团队
 
-Instead of spinning up a temporary team of agents for every request, you hand over a real operating team with:
+---
 
-- persistent roles
-- cross-cycle memory
-- a chief-of-staff layer
-- review and approval loops
-- reusable business assets
-- a boss-facing workbench
+## 这是什么
 
-## What it is
+- 一个围绕业务目标持续工作的数字团队
+- 一个把业务上下文转成 `brief / draft / review / decision / briefing` 的系统
+- 一个让老板少介入过程、多介入关键判断的工作台
+- 一个会跨周期累积经验，而不是每次都从零开始的执行团队
 
-- A team that keeps operating across cycles
-- A system that turns business context into briefs, drafts, reviews, decisions, and briefings
-- A product for owners who care more about outcomes than chatting with agents
-- A workbench where the owner intervenes only on the right decisions
+## 这不是什么
 
-## What it is not
+- 不是一次性多 agent 编排
+- 不是给 cron 套一层 UI 的 workflow 产品
+- 不是“雇几个 AI 员工”的经营游戏
+- 不是一个泛化的 AI 公司模拟器
+- 不是 prompt playground
+- 不是“看起来很热闹，但交付物不落地”的 agent 展示器
 
-- Not a one-shot agent swarm
-- Not a cron wrapper around a multi-agent workflow
-- Not a “hire some AI employees” game
-- Not a generic AI company simulator
-- Not a prompt playground
+---
 
-## Why this exists
+## 为什么做这个
 
-Many founder-led teams have ongoing content and growth goals, but no stable execution team.
+很多 founder-led 团队、内容负责人、增长负责人，都有明确且持续的业务产出目标，但没有一支真正稳定的执行团队。
 
-Today they usually choose one of three bad options:
+他们通常只有三种选择：
 
-1. Do everything themselves
-2. Hire a full team too early
-3. Use single-agent tools that help with output, but do not preserve team memory, role boundaries, review quality, or operating rhythm
+1. 自己做，持续被杂事打断
+2. 提前招一整支团队，成本高、管理重
+3. 用单 agent 工具提效，但拿不到持续团队的记忆、分工、审核和复盘能力
 
-`Digital Company` is built around a different idea:
+`Digital Company` 想解决的不是“单次任务能不能更快完成”，而是另一个问题：
 
-**People do not just need better task execution. They need a team that keeps learning their business and keeps delivering.**
+> 当同一支数字团队持续存在、持续记忆、持续协作、持续交付时，会发生什么？
 
-## Product principles
+---
 
-### 1. Delivery first
+## 产品原则
 
-The product is judged by what the owner receives, not by how interesting the internal agent process looks.
+### 1. 交付优先
 
-Every cycle should produce:
+这个产品最终要看用户拿到了什么，而不是 agent 之间看起来协作得多热闹。
 
-- business assets
-- management materials
+每个周期都应该产出两类东西：
 
-### 2. Persistent team, not temporary workflow
+- `业务资产`
+- `管理材料`
 
-The team persists across weeks, retains context, and improves over time.
+### 2. 持续团队，不是临时工作流
 
-### 3. Boss interface, not orchestrator interface
+这支团队应该跨周存在、跨周期积累上下文、逐步降低老板重复解释业务背景的次数。
 
-The user should not need to micromanage each agent.
+### 3. 老板工作台，不是 orchestrator 控制台
 
-The default surface is:
+默认界面不应该要求用户调度每个 agent。
 
-- today’s briefing
-- current cycle progress
-- latest deliverables
-- pending approvals
-- risks and escalation
+默认应该回答的是：
 
-### 4. Org chart as explanation, not performance
+- 今天发生了什么
+- 这周团队在推进什么
+- 最新交付物是什么
+- 哪些事情需要我拍板
+- 哪些地方有风险
 
-The org structure matters because it explains ownership, delegation, collaboration, and escalation.
+### 4. 组织架构是解释层，不是表演层
 
-It does **not** exist to simulate office drama.
+组织架构应该帮助老板理解：
 
-### 5. Useful memory over theatrical humanity
+- 谁负责什么
+- 谁向谁汇报
+- 谁和谁在协作
+- 哪一段链路在卡住
 
-We want the team to remember:
+而不是为了模拟办公室戏剧。
 
-- business context
-- brand rules
-- review preferences
-- past decisions
-- quality feedback
-- recurring mistakes
+### 5. 复刻有用的人类属性，不复刻人类噪音
 
-We do **not** need to recreate all the noise of a human office.
+我们需要保留的是：
 
-## Core objects
+- 角色边界
+- 协作关系
+- 历史决策
+- 反馈沉淀
+- 授权和信任
 
-- `Team` — the persistent operating team
-- `Cycle` — the weekly operating cadence
-- `Project` — a concrete initiative within a cycle
-- `Task` — executable work owned by one role/member
-- `Artifact` — deliverable assets such as briefs, drafts, summaries, and reports
-- `ArtifactReview` — structured review and quality gates
-- `Briefing` — compressed updates for the boss
-- `Decision` — owner decisions and policy changes
-- `MemoryEntry` — reusable experience and feedback
-- `PreferenceProfile` — structured owner preferences and brand constraints
+我们不需要先做的是：
 
-## Example team
+- 情绪化人格
+- 办公室政治
+- 为了“像人”而制造低效率
 
-The first default team looks like a small content growth department:
+### 6. 先做“数字小团队”，不做“数字公司平台”
 
-- Researcher
-- Writer
-- Editor
-- Distribution / Ops
-- Chief of Staff
+`Digital Company` 这个名字保留了长期方向，但第一版绝不是要做一个泛化的 AI 公司控制平面。
 
-The owner is not one more operator inside the team.
+第一版只做一个足够窄、但真正成立的产品对象：
 
-The owner acts as the boss:
+## 数字内容增长团队
 
-- sets goals
-- approves key decisions
-- reviews important deliverables
-- delegates more over time
+---
 
-## Example outputs
+## 和一般多 agent 产品的区别
 
-Each cycle should produce assets the owner can actually use:
+表面上看，很多产品都可以表现成：
 
-- content strategy card
-- topic briefs
-- research summaries
-- long-form article draft
-- short-form social posts
-- competitor watch note
-- cycle retrospective
-- daily or weekly boss briefing
+- 多个角色并行
+- 定时开工
+- 自动产出一批内容
 
-## Architecture direction
+但本质并不一样。
 
-Current MVP direction:
+普通多 agent workflow 更像：
+
+- 到时间触发
+- 临时拉起一组角色
+- 完成一批任务
+- 本次执行结束后状态基本散掉
+
+`Digital Company` 更像：
+
+- 团队长期存在
+- 岗位与成员持续存在
+- 团队围绕经营节奏推进，而不是围绕单次 prompt 推进
+- 团队沉淀偏好、标准、经验和历史判断
+- 老板通过简报、审批、复盘和例外处理来管理团队
+
+如果没有这些层，它本质上还是 workflow。  
+如果这些层成立，它才开始像一支真正的持续团队。
+
+---
+
+## 核心对象
+
+- `Team`：长期存在的数字团队
+- `Cycle`：按周推进的经营节奏
+- `Project`：某个周期内的目标单元
+- `Task`：具体执行任务
+- `Artifact`：交付资产，如 brief、初稿、摘要、报告
+- `ArtifactReview`：结构化审核与质量门
+- `Briefing`：给老板看的压缩简报
+- `Decision`：老板拍板与规则变化
+- `MemoryEntry`：经验、反馈与可复用上下文
+- `PreferenceProfile`：品牌规则与老板偏好
+
+---
+
+## 默认团队长什么样
+
+第一版默认团队更像一个小型内容增长部门：
+
+- 研究员
+- 作者
+- 编辑
+- 运营 / 分发
+- 秘书长
+
+其中秘书长不是装饰角色，而是承上启下的一层：
+
+- 组织会议纪要
+- 汇总团队内部争议
+- 过滤噪音
+- 压缩成老板可快速消费的简报
+- 只在需要时升级给老板
+
+老板不是团队里的一个执行节点，而是：
+
+- 定目标
+- 做关键审批
+- 看关键交付
+- 逐步放权
+
+---
+
+## 用户最终拿到什么
+
+第一版要让用户稳定拿到的是“可直接消费的东西”，而不是一堆 agent 过程日志。
+
+### 业务资产
+
+- 本周内容策略卡
+- 选题 brief
+- 研究摘要
+- 长文初稿
+- 社媒短内容
+- 竞品/行业观察摘要
+- 周期复盘
+
+### 管理材料
+
+- 今日 / 本周简报
+- 会议纪要
+- 待拍板事项
+- 风险升级
+- 下周期建议
+
+也就是：
+
+## 业务资产 + 管理材料
+
+这两类东西同时成立，产品才既有真实交付价值，也有“接手一个团队”的经营感。
+
+---
+
+## 主界面应该是什么
+
+主界面不是任务控制台，也不是 agent 聊天室。
+
+主界面应该是一个 `BOSS 工作台`，优先展示：
+
+- 本周期目标
+- 团队脉搏
+- 最新交付
+- 待我决策
+- 秘书长简报
+- 组织架构缩略图
+
+其中组织架构是重要信息层，但不是首页唯一主角。
+
+---
+
+## 技术方向
+
+当前 MVP 技术方向：
 
 - `Next.js`
 - `LangGraph.js`
 - `PostgreSQL`
 - `Inngest`
 
-Principles:
+核心原则：
 
-- PostgreSQL is the source of truth
-- LangGraph is the workflow runtime, not the business truth layer
-- Inngest handles external scheduling and orchestration
-- artifacts, reviews, briefings, and decisions are first-class objects
+- PostgreSQL 是业务事实层
+- LangGraph 是流程执行器，不是真相来源
+- Inngest 负责外层调度与异步编排
+- `Artifact / Review / Briefing / Decision` 都是一等对象
 
-## Current status
+---
 
-This repository is in early build mode.
+## 当前进展
 
-What already exists:
+目前仓库里已经有：
 
-- product definition and review notes
-- technical feasibility research
-- technical design draft
-- initial Next.js workbench skeleton
-- early UI explorations for the boss workbench
+- 产品定义与边界收敛文档
+- 技术可行性调研
+- 技术方案草案
+- BOSS 工作台原型探索
+- 初始 Next.js 项目骨架
 
-What is being built now:
+当前正在推进：
 
-- schema foundation
-- workflow runtime scaffolding
-- team bootstrap flow
-- boss workbench prototype
+- 领域模型与数据库 schema
+- 工作流运行时骨架
+- founding team bootstrap
+- BOSS 工作台第一版
 
-## Quickstart
+---
+
+## 快速开始
 
 ```bash
 pnpm install
@@ -184,30 +278,49 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-Then open [http://localhost:3000](http://localhost:3000).
+然后打开 [http://localhost:3000](http://localhost:3000)
 
-## Roadmap
+---
 
-- [x] Narrow product from “AI company” to “persistent content growth team”
-- [x] Define core domain and architecture principles
-- [x] Build workbench skeleton
-- [ ] Add domain schema foundation
-- [ ] Bootstrap a founding team
-- [ ] Implement cycle planning flow
-- [ ] Implement briefing and approval loop
-- [ ] Implement artifact production and review flow
-- [ ] Add memory and feedback loop
+## 公开路线图
 
-## Why this may matter
+- [x] 从“数字公司”收敛到“持续内容增长团队”
+- [x] 明确核心对象与技术原则
+- [x] 搭建工作台骨架
+- [ ] 完成第一版 schema foundation
+- [ ] 完成 founding team bootstrap
+- [ ] 完成 cycle planning flow
+- [ ] 完成 briefing / approval loop
+- [ ] 完成 artifact production / review flow
+- [ ] 完成 memory / feedback loop
 
-Most AI products today help complete a task.
+---
 
-We are interested in a different question:
+## 推荐阅读
 
-**What happens when the same team keeps existing, keeps remembering, keeps collaborating, and keeps shipping?**
+- 产品定义：[`docs/plans/2026-03-12-digital-company-product-note-v0.3.md`](docs/plans/2026-03-12-digital-company-product-note-v0.3.md)
+- 技术方案：[`docs/plans/2026-03-12-digital-company-technical-design-v0.2.md`](docs/plans/2026-03-12-digital-company-technical-design-v0.2.md)
+- 实施计划：[`docs/plans/2026-03-13-digital-company-phase0-implementation-plan.md`](docs/plans/2026-03-13-digital-company-phase0-implementation-plan.md)
 
-## Contributing
+---
 
-The project is very early. Sharp product feedback, architecture critiques, and implementation contributions are all useful.
+## 参与贡献
 
-If this direction resonates with you, open an issue or start a discussion once the public repo is live.
+这个项目还很早期。当前最有价值的贡献类型包括：
+
+- 产品边界批评
+- ICP 与场景收敛建议
+- BOSS 工作台的信息架构反馈
+- 持续团队记忆 / 协作 / 授权模型的技术建议
+- 具体实现 PR
+
+参与前建议先看：
+
+- [`CONTRIBUTING.md`](CONTRIBUTING.md)
+
+---
+
+## 一句话收束
+
+大多数 AI 产品在帮你完成一个任务。  
+`Digital Company` 想验证的是：**能不能让一支数字团队持续存在，并持续交付。**

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 产品定义与范围阅读入口
+    url: https://github.com/slicenferqin/digital-company/blob/main/docs/plans/2026-03-12-digital-company-product-note-v0.3.md
+    about: 提产品反馈前，建议先阅读当前产品定义稿。
+  - name: 技术方案阅读入口
+    url: https://github.com/slicenferqin/digital-company/blob/main/docs/plans/2026-03-12-digital-company-technical-design-v0.2.md
+    about: 提技术讨论前，建议先阅读当前技术方案稿。
