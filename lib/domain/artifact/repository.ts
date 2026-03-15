@@ -7,8 +7,10 @@ import type {
   Artifact,
   ArtifactReview,
   CreateArtifactDraftInput,
+  CreateArtifactVersionInput,
   CreateArtifactReviewInput,
   FeedbackSignal,
+  UpdateArtifactStatusInput,
   WriteFeedbackSignalInput
 } from "./types";
 
@@ -92,6 +94,33 @@ export async function createArtifactDraft(input: CreateArtifactDraftInput, datab
   return mapArtifact(row);
 }
 
+export async function createArtifactVersion(
+  input: CreateArtifactVersionInput,
+  database = getDatabase()
+) {
+  const [row] = await database
+    .insert(artifacts)
+    .values({
+      teamId: input.teamId,
+      cycleId: input.cycleId,
+      projectId: input.projectId ?? null,
+      taskId: input.taskId ?? null,
+      artifactType: input.artifactType,
+      title: input.title,
+      version: input.version,
+      status: input.status ?? "draft",
+      authorMemberId: input.authorMemberId ?? null,
+      reviewerMemberId: input.reviewerMemberId ?? null,
+      summary: input.summary ?? null,
+      bodyMarkdown: input.bodyMarkdown ?? null,
+      storageUri: input.storageUri ?? null,
+      metadata: input.metadata ?? {}
+    })
+    .returning();
+
+  return mapArtifact(row);
+}
+
 export async function createArtifactReview(input: CreateArtifactReviewInput, database = getDatabase()) {
   const [row] = await database
     .insert(artifactReviews)
@@ -108,6 +137,30 @@ export async function createArtifactReview(input: CreateArtifactReviewInput, dat
     .returning();
 
   return mapArtifactReview(row);
+}
+
+export async function getArtifactById(artifactId: string, database = getDatabase()) {
+  const [row] = await database.select().from(artifacts).where(eq(artifacts.id, artifactId)).limit(1);
+  return row ? mapArtifact(row) : null;
+}
+
+export async function updateArtifactStatus(
+  input: UpdateArtifactStatusInput,
+  database = getDatabase()
+) {
+  const [row] = await database
+    .update(artifacts)
+    .set({
+      status: input.status,
+      metadata: input.metadata,
+      reviewedAt: input.reviewedAt ?? undefined,
+      publishedAt: input.publishedAt ?? undefined,
+      updatedAt: new Date()
+    })
+    .where(eq(artifacts.id, input.artifactId))
+    .returning();
+
+  return row ? mapArtifact(row) : null;
 }
 
 export async function writeFeedbackSignal(input: WriteFeedbackSignalInput, database = getDatabase()) {

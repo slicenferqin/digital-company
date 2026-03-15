@@ -1,13 +1,15 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { getDatabase } from "@/lib/db/client";
-import { members, roles, teamConfigs, teams } from "@/lib/db/schema";
+import { members, preferenceProfiles, roles, teamConfigs, teams } from "@/lib/db/schema";
 
 import type {
   CreateMemberInput,
+  CreatePreferenceProfileInput,
   CreateRoleInput,
   CreateTeamInput,
   Member,
+  PreferenceProfile,
   Role,
   Team,
   TeamConfig
@@ -154,4 +156,75 @@ export async function getTeamById(teamId: string, database = getDatabase()) {
 export async function listMembersByTeamId(teamId: string, database = getDatabase()) {
   const rows = await database.select().from(members).where(eq(members.teamId, teamId));
   return rows.map(mapMember);
+}
+
+export async function listPreferenceProfilesByTeamId(teamId: string, database = getDatabase()) {
+  const rows = await database.select().from(preferenceProfiles).where(eq(preferenceProfiles.teamId, teamId));
+  return rows.map((row) => ({
+    id: row.id,
+    teamId: row.teamId,
+    profileType: row.profileType,
+    name: row.name,
+    preferences: row.preferences,
+    source: row.source,
+    version: row.version,
+    active: row.active,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt
+  }));
+}
+
+export async function deactivatePreferenceProfiles(
+  teamId: string,
+  profileType: PreferenceProfile["profileType"],
+  name: string,
+  database = getDatabase()
+) {
+  const rows = await database
+    .update(preferenceProfiles)
+    .set({
+      active: false,
+      updatedAt: new Date()
+    })
+    .where(
+      and(
+        eq(preferenceProfiles.teamId, teamId),
+        eq(preferenceProfiles.profileType, profileType),
+        eq(preferenceProfiles.name, name)
+      )
+    )
+    .returning();
+
+  return rows.length;
+}
+
+export async function createPreferenceProfile(
+  input: CreatePreferenceProfileInput,
+  database = getDatabase()
+) {
+  const [row] = await database
+    .insert(preferenceProfiles)
+    .values({
+      teamId: input.teamId,
+      profileType: input.profileType,
+      name: input.name,
+      preferences: input.preferences,
+      source: input.source ?? null,
+      version: input.version ?? 1,
+      active: input.active ?? true
+    })
+    .returning();
+
+  return {
+    id: row.id,
+    teamId: row.teamId,
+    profileType: row.profileType,
+    name: row.name,
+    preferences: row.preferences,
+    source: row.source,
+    version: row.version,
+    active: row.active,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt
+  };
 }

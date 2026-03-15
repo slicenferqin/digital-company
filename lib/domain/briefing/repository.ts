@@ -1,3 +1,5 @@
+import { eq } from "drizzle-orm";
+
 import { getDatabase } from "@/lib/db/client";
 import { briefings } from "@/lib/db/schema";
 
@@ -45,4 +47,9 @@ export async function createBriefing(input: CreateBriefingInput, database = getD
     .returning();
 
   return mapBriefing(row);
+}
+
+export async function listBriefingsForCycle(cycleId: string, database = getDatabase()) {
+  const rows = await database.select().from(briefings).where(eq(briefings.cycleId, cycleId));
+  return rows.map(mapBriefing);
 }

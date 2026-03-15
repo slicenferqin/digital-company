@@ -43,6 +43,11 @@ export async function createDecision(input: CreateDecisionInput, database = getD
   return mapDecision(row);
 }
 
+export async function getDecisionById(decisionId: string, database = getDatabase()) {
+  const [row] = await database.select().from(decisions).where(eq(decisions.id, decisionId)).limit(1);
+  return row ? mapDecision(row) : null;
+}
+
 export async function updateDecision(input: UpdateDecisionInput, database = getDatabase()) {
   const [row] = await database
     .update(decisions)

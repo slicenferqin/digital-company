@@ -83,6 +83,11 @@ export interface CreateArtifactDraftInput {
   metadata?: Record<string, unknown>;
 }
 
+export interface CreateArtifactVersionInput extends CreateArtifactDraftInput {
+  version: number;
+  status?: ArtifactStatus;
+}
+
 export interface CreateArtifactReviewInput {
   artifactId: string;
   teamId: string;
@@ -105,4 +110,12 @@ export interface WriteFeedbackSignalInput {
   summary: string;
   payload?: Record<string, unknown>;
   weight?: number;
+}
+
+export interface UpdateArtifactStatusInput {
+  artifactId: string;
+  status: ArtifactStatus;
+  metadata?: Record<string, unknown>;
+  reviewedAt?: Date | null;
+  publishedAt?: Date | null;
 }

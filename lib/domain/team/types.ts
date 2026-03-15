@@ -94,6 +94,16 @@ export interface PreferenceProfile {
   updatedAt: Date;
 }
 
+export interface CreatePreferenceProfileInput {
+  teamId: string;
+  profileType: PreferenceProfileType;
+  name: string;
+  preferences: JsonMap;
+  source?: string;
+  version?: number;
+  active?: boolean;
+}
+
 export interface CreateTeamInput {
   name: string;
   businessName: string;
