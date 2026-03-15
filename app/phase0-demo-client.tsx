@@ -82,8 +82,8 @@ export function Phase0DemoClient() {
           <p className="eyebrow">Phase 0 Demo</p>
           <h3>一条可点击的端到端演示路径</h3>
           <p className="demoCopy">
-            这条路径会串起 founding team bootstrap、cycle planning、research、production、
-            briefing、owner decision 和 resume。
+            这条路径只用于内部技术验证，会串起 founding team bootstrap、cycle planning、
+            research、production、briefing、owner decision 和 resume。
           </p>
         </div>
         <div className="heroActions">

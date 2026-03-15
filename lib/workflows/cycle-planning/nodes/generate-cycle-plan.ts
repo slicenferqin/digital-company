@@ -1,10 +1,15 @@
 import type { CyclePlanningState, CyclePlanDraft, PlannedProjectDraft } from "../state";
 
-function buildProjectDrafts(priorityFocus: string, memoryTitles: string[]): PlannedProjectDraft[] {
+function buildProjectDrafts(
+  priorityFocus: string,
+  memoryTitles: string[],
+  writingGuidelines: string[],
+  needsPreferenceCalibration: boolean
+): PlannedProjectDraft[] {
   const memoryHint =
     memoryTitles.length > 0 ? `吸收历史反馈：${memoryTitles.slice(0, 2).join("、")}` : "吸收已有团队经验";
 
-  return [
+  const drafts: PlannedProjectDraft[] = [
     {
       type: "strategy",
       title: `制定 ${priorityFocus} 的周期策略`,
@@ -35,7 +40,10 @@ function buildProjectDrafts(priorityFocus: string, memoryTitles: string[]): Plan
           taskType: "article_draft",
           title: "完成 1 篇旗舰长文初稿",
           priority: 95,
-          requiresOwnerApproval: false
+          requiresOwnerApproval: false,
+          inputContext: {
+            writingGuidelines
+          }
         }
       ]
     },
@@ -60,6 +68,28 @@ function buildProjectDrafts(priorityFocus: string, memoryTitles: string[]): Plan
       ]
     }
   ];
+
+  if (needsPreferenceCalibration) {
+    drafts.push({
+      type: "editing",
+      title: "根据老板偏好校准写作与审核规则",
+      goal: "把稳定反馈转成明确的写作规则与编辑审核门，减少下一轮返工。",
+      priority: 85,
+      tasks: [
+        {
+          taskType: "preference_calibration",
+          title: "将老板稳定偏好写入写作规则与审核清单",
+          priority: 85,
+          requiresOwnerApproval: false,
+          inputContext: {
+            writingGuidelines
+          }
+        }
+      ]
+    });
+  }
+
+  return drafts;
 }
 
 export async function generateCyclePlan(state: CyclePlanningState) {
@@ -76,6 +106,17 @@ export async function generateCyclePlan(state: CyclePlanningState) {
     state.requestedGoalSummary ??
     `围绕 ${priorityFocus} 连续产出一批可审核、可复用、可持续优化的内容资产。`;
   const memoryTitles = state.memoryInputs.map((item) => item.title);
+  const activeOwnerPreferences = state.preferenceProfiles.filter(
+    (profile) => profile.profileType === "owner" && profile.active
+  );
+  const writingGuidelines = activeOwnerPreferences.flatMap((profile) => {
+    const prefs = profile.preferences as Record<string, unknown>;
+    const note = typeof prefs.note === "string" ? prefs.note : null;
+    const hints = Array.isArray(prefs.editBehaviorHints)
+      ? prefs.editBehaviorHints.filter((hint): hint is string => typeof hint === "string")
+      : [];
+    return [...(note ? [note] : []), ...hints];
+  });
 
   const cyclePlan: CyclePlanDraft = {
     cycleType: state.requestedCycleType ?? "weekly",
@@ -84,9 +125,17 @@ export async function generateCyclePlan(state: CyclePlanningState) {
     rationale: [
       `以 ${priorityFocus} 作为本周期重点主题`,
       `优先把交付物做成可审核资产，而不是停留在过程`,
-      memoryTitles.length > 0 ? `已吸收记忆输入：${memoryTitles.slice(0, 3).join("、")}` : "当前无历史记忆输入，按默认 founding team 节奏推进"
+      memoryTitles.length > 0 ? `已吸收记忆输入：${memoryTitles.slice(0, 3).join("、")}` : "当前无历史记忆输入，按默认 founding team 节奏推进",
+      writingGuidelines.length > 0
+        ? `已把老板稳定偏好转成下周期写作规则：${writingGuidelines.join("、")}`
+        : "当前没有稳定 owner preference 影响计划结构"
     ],
-    projects: buildProjectDrafts(priorityFocus, memoryTitles)
+    projects: buildProjectDrafts(
+      priorityFocus,
+      memoryTitles,
+      writingGuidelines,
+      writingGuidelines.length > 0
+    )
   };
 
   return {

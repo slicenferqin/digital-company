@@ -1,4 +1,4 @@
-import { Phase0DemoClient } from "./phase0-demo-client";
+import Link from "next/link";
 
 const priorities = [
   "先看秘书长简报，确认本周期真正需要你介入的两件事。",
@@ -126,7 +126,16 @@ export default function HomePage() {
           </section>
         </div>
 
-        <Phase0DemoClient />
+        <section className="panel internalNote">
+          <h3>当前状态说明</h3>
+          <p>
+            这里仍然是老板工作台骨架，不把内部技术 demo 当作产品主路径。Phase 0
+            演示被单独放到内部验证页，避免把技术顺滑路径误当成“产品已成立”。
+          </p>
+          <Link className="textLink" href="/demo/phase0">
+            查看内部 Phase 0 demo 路径
+          </Link>
+        </section>
       </section>
     </main>
   );

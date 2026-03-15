@@ -34,6 +34,23 @@ describe("cycle planning graph", () => {
         updatedAt: new Date()
       }
     ]);
+    const listPreferenceProfilesByTeamId = vi.fn().mockResolvedValue([
+      {
+        id: "pref_1",
+        teamId: "team_1",
+        profileType: "owner",
+        name: "owner:brand_voice",
+        preferences: {
+          note: "语气需要更克制",
+          editBehaviorHints: ["首段先给结论"]
+        },
+        source: "feedback_capture",
+        version: 1,
+        active: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ]);
 
     const fetchMemoryInputsForPlanning = vi.fn().mockResolvedValue([
       {
@@ -89,6 +106,7 @@ describe("cycle planning graph", () => {
     const graph = buildCyclePlanningGraph({
       getTeamById,
       listMembersByTeamId,
+      listPreferenceProfilesByTeamId,
       fetchMemoryInputsForPlanning,
       createCycle,
       createProject,
@@ -107,12 +125,21 @@ describe("cycle planning graph", () => {
     expect(getTeamById).toHaveBeenCalledWith("team_1");
     expect(fetchMemoryInputsForPlanning).toHaveBeenCalledWith("team_1");
     expect(createCycle).toHaveBeenCalledTimes(1);
-    expect(createProject).toHaveBeenCalledTimes(3);
-    expect(createTask).toHaveBeenCalledTimes(5);
+    expect(createProject).toHaveBeenCalledTimes(4);
+    expect(createTask).toHaveBeenCalledTimes(6);
     expect(result.cycle?.id).toBe("cycle_1");
-    expect(result.projects).toHaveLength(3);
-    expect(result.tasks).toHaveLength(5);
+    expect(result.projects).toHaveLength(4);
+    expect(result.tasks).toHaveLength(6);
     expect(result.cyclePlan?.priorityFocus).toBe("AI 销售自动化");
     expect(result.cyclePlan?.rationale[2]).toContain("老板偏好更克制的表达");
+    expect(result.cyclePlan?.rationale[3]).toContain("语气需要更克制");
+    expect(createTask).toHaveBeenCalledWith(
+      expect.objectContaining({
+        taskType: "preference_calibration",
+        inputContext: expect.objectContaining({
+          writingGuidelines: expect.arrayContaining(["语气需要更克制", "首段先给结论"])
+        })
+      })
+    );
   });
 });

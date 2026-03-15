@@ -9,10 +9,12 @@ export function createLoadTeamContextNode(dependencies: CyclePlanningDependencie
     }
 
     const members = await dependencies.listMembersByTeamId(state.teamId);
+    const preferenceProfiles = await dependencies.listPreferenceProfilesByTeamId(state.teamId);
 
     return {
       team,
-      members
+      members,
+      preferenceProfiles
     };
   };
 }

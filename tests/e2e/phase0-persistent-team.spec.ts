@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("phase0 persistent team demo path completes owner flow", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/demo/phase0");
 
   await page.getByTestId("start-phase0-demo").click();
 

@@ -2,13 +2,14 @@ import { Annotation } from "@langchain/langgraph";
 
 import type { Cycle, CycleType, Project, ProjectType, Task } from "@/lib/domain/cycle/types";
 import type { PlanningMemoryInput } from "@/lib/domain/memory/types";
-import type { Member, Team } from "@/lib/domain/team/types";
+import type { Member, PreferenceProfile, Team } from "@/lib/domain/team/types";
 
 export interface PlannedTaskDraft {
   taskType: string;
   title: string;
   priority: number;
   requiresOwnerApproval: boolean;
+  inputContext?: Record<string, unknown>;
 }
 
 export interface PlannedProjectDraft {
@@ -57,6 +58,7 @@ export const CyclePlanningStateAnnotation = Annotation.Root({
   requestedPriorityFocus: replaceReducer<string | null>(null),
   team: replaceReducer<Team | null>(null),
   members: replaceArrayReducer<Member>(),
+  preferenceProfiles: replaceArrayReducer<PreferenceProfile>(),
   memoryInputs: replaceArrayReducer<PlanningMemoryInput>(),
   cyclePlan: replaceReducer<CyclePlanDraft | null>(null),
   cycle: replaceReducer<Cycle | null>(null),
@@ -70,6 +72,7 @@ export type CyclePlanningStateUpdate = typeof CyclePlanningStateAnnotation.Updat
 export interface CyclePlanningDependencies {
   getTeamById: typeof import("@/lib/domain/team/repository").getTeamById;
   listMembersByTeamId: typeof import("@/lib/domain/team/repository").listMembersByTeamId;
+  listPreferenceProfilesByTeamId: typeof import("@/lib/domain/team/repository").listPreferenceProfilesByTeamId;
   fetchMemoryInputsForPlanning: typeof import("@/lib/domain/memory/repository").fetchMemoryInputsForPlanning;
   createCycle: typeof import("@/lib/domain/cycle/repository").createCycle;
   createProject: typeof import("@/lib/domain/cycle/repository").createProject;

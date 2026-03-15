@@ -175,6 +175,8 @@ async function runDemoBootstrap(sessionId: string, threadId: string): Promise<De
   const cyclePlanningGraph = buildCyclePlanningGraph({
     getTeamById: async (teamId) => teams.find((item) => item.id === teamId) ?? null,
     listMembersByTeamId: async (teamId) => members.filter((item) => item.teamId === teamId),
+    listPreferenceProfilesByTeamId: async (teamId) =>
+      preferenceProfiles.filter((item) => item.teamId === teamId),
     fetchMemoryInputsForPlanning: async () => [
       {
         id: createId("memory_seed"),

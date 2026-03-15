@@ -2,7 +2,11 @@ import { END, START, StateGraph } from "@langchain/langgraph";
 
 import { createCycle, createProject, createTask } from "@/lib/domain/cycle/repository";
 import { fetchMemoryInputsForPlanning } from "@/lib/domain/memory/repository";
-import { getTeamById, listMembersByTeamId } from "@/lib/domain/team/repository";
+import {
+  getTeamById,
+  listMembersByTeamId,
+  listPreferenceProfilesByTeamId
+} from "@/lib/domain/team/repository";
 
 import { createProjectsAndTasksNode } from "./nodes/create-projects-and-tasks";
 import { generateCyclePlan } from "./nodes/generate-cycle-plan";
@@ -17,6 +21,7 @@ import {
 const defaultDependencies: CyclePlanningDependencies = {
   getTeamById,
   listMembersByTeamId,
+  listPreferenceProfilesByTeamId,
   fetchMemoryInputsForPlanning,
   createCycle,
   createProject,

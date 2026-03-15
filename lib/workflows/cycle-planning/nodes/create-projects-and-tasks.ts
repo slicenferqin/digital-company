@@ -48,7 +48,8 @@ export function createProjectsAndTasksNode(dependencies: CyclePlanningDependenci
           requiresOwnerApproval: taskDraft.requiresOwnerApproval,
           inputContext: {
             projectGoal: projectDraft.goal,
-            cyclePriorityFocus: state.cyclePlan.priorityFocus
+            cyclePriorityFocus: state.cyclePlan.priorityFocus,
+            ...(taskDraft.inputContext ?? {})
           }
         });
 

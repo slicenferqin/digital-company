@@ -285,10 +285,35 @@ button {
   gap: 20px;
 }
 
+.internalNote {
+  display: grid;
+  gap: 12px;
+}
+
+.internalNote p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.textLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.textLink:hover {
+  text-decoration: underline;
+}
+
 .demoPanel {
   padding: 24px;
   display: grid;
   gap: 20px;
+}
+
+.demoWorkspace {
+  grid-column: 1 / -1;
 }
 
 .demoHeader {
