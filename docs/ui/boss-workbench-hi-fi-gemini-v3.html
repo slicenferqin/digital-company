@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>The Executive Console v3.0</title>
+    <style>
+        :root {
+            --bg: #ece9e0;
+            --ink: #1a1c1e;
+            --secondary: #5d6166;
+            --accent: #2e4a3f; 
+            --paper: #fdfcf9;
+            --border: rgba(26, 28, 30, 0.08);
+            --serif: "Iowan Old Style", "Palatino Linotype", "Songti SC", serif;
+            --success: #2e7d32;
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body {
+            margin: 0; background-color: var(--bg); color: var(--ink);
+            font-family: -apple-system, "PingFang SC", sans-serif;
+            height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+
+        .console {
+            width: 96vw; height: 92vh; background: var(--paper);
+            display: grid; grid-template-columns: 320px 1fr 320px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.12); position: relative;
+        }
+
+        /* 布局装饰线 */
+        .column { border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 40px; position: relative; }
+        .column:last-child { border-right: none; }
+
+        /* 标题与文字 */
+        h2 { font-family: var(--serif); font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--secondary); margin-bottom: 30px; }
+        .greeting { font-family: var(--serif); font-size: 42px; line-height: 1.1; margin-bottom: 40px; }
+        .module-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: block; }
+
+        /* 决策项：可点击态 */
+        .decision-card {
+            background: #fff; border: 1px solid var(--border); padding: 24px; border-radius: 4px;
+            cursor: pointer; margin-bottom: 16px; position: relative;
+        }
+        .decision-card:hover { border-color: var(--ink); box-shadow: 0 10px 30px rgba(0,0,0,0.05); transform: translateY(-2px); }
+        .decision-card h3 { font-family: var(--serif); font-size: 20px; margin: 0 0 10px 0; }
+        .decision-card p { font-size: 13px; color: var(--secondary); margin: 0; line-height: 1.4; }
+
+        /* 决策弹窗 Overlay */
+        #overlay {
+            position: absolute; inset: 0; background: rgba(236, 233, 224, 0.95);
+            display: none; justify-content: center; align-items: center; z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        .modal {
+            background: var(--paper); width: 600px; padding: 60px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1); border: 1px solid var(--border);
+        }
+        .modal h2 { font-size: 32px; text-transform: none; color: var(--ink); margin-bottom: 20px; }
+        .modal-body { font-size: 16px; line-height: 1.8; color: var(--secondary); margin-bottom: 40px; }
+        .btn-group { display: flex; gap: 15px; }
+        button {
+            padding: 15px 30px; border-radius: 99px; border: 1px solid var(--ink);
+            font-size: 14px; cursor: pointer; background: none;
+        }
+        button.primary { background: var(--ink); color: #fff; }
+        button:hover { opacity: 0.7; }
+
+        /* 动态进度条 */
+        .progress-bar { height: 4px; background: var(--border); width: 100%; border-radius: 2px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 67%; }
+
+        /* 消息提示 */
+        #toast {
+            position: fixed; bottom: 40px; right: 40px; background: var(--ink); color: #fff;
+            padding: 15px 30px; border-radius: 4px; display: none; z-index: 1000;
+        }
+
+        .done-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--secondary); font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="console">
+        <aside class="column">
+            <h2>Pulse & Signals</h2>
+            <div class="module">
+                <span class="module-label">公司目标进度</span>
+                <div style="font-size: 32px; font-family: var(--serif);" id="target-pct">67%</div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            </div>
+            <div class="module" style="margin-top: 40px;">
+                <span class="module-label">秘书提醒</span>
+                <p id="brief-text" style="font-size: 14px; line-height: 1.6;">目前有 2 项决策等待你处理。批准作者岗扩编将显著缓解下周的交付压力。</p>
+            </div>
+        </aside>
+
+        <main class="column" style="flex: 1;">
+            <div class="greeting" id="main-greeting">早安，老板。<br>今日有 2 项关键决策。</div>
+            
+            <div id="decision-list">
+                <div class="decision-card" onclick="openModal('hire')">
+                    <span class="module-label" style="color: #b33939;">● 高优先级</span>
+                    <h3>批准 Aurora Lab 作者岗扩编 (+1)</h3>
+                    <p>当前团队过载严重，新作者能提升 25% 的内容产量。</p>
+                </div>
+                <div class="decision-card" onclick="openModal('draft')">
+                    <span class="module-label">● 待评审</span>
+                    <h3>确认《AI 工作台》旗舰稿版本</h3>
+                    <p>编辑部已收敛出两个方向：深度专业版 vs 社交传播版。</p>
+                </div>
+            </div>
+            
+            <div id="empty-state" class="done-state" style="display: none;">
+                <p>今日决策已全部处理完毕。公司正在高效运转中。</p>
+            </div>
+        </main>
+
+        <aside class="column">
+            <h2>Status & Assets</h2>
+            <div class="module">
+                <span class="module-label">人才编制</span>
+                <div style="font-size: 24px; font-family: var(--serif);" id="staff-count">10 / 11</div>
+                <p style="font-size: 12px; color: var(--secondary); margin-top: 5px;">含 1 名执行秘书，2 名主笔</p>
+            </div>
+            <div class="module" style="margin-top: 40px;">
+                <span class="module-label">最新资产</span>
+                <div style="font-size: 13px; padding: 12px; border: 1px dashed var(--border); margin-bottom: 10px;">
+                    📄 策略扫描_0311.pdf
+                </div>
+                <div style="font-size: 13px; padding: 12px; border: 1px dashed var(--border);">
+                    🎬 视频号拆条_草稿.mp4
+                </div>
+            </div>
+        </aside>
+
+        <div id="overlay">
+            <div class="modal">
+                <h2 id="modal-title">决策详情</h2>
+                <div class="modal-body" id="modal-body">
+                    内容加载中...
+                </div>
+                <div class="btn-group">
+                    <button class="primary" onclick="processDecision('approve')">确认批准</button>
+                    <button onclick="closeModal()">暂缓处理</button>
+                    <button onclick="processDecision('reject')" style="border-color: #b33939; color: #b33939;">否决申请</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">操作成功</div>
+
+    <script>
+        const data = {
+            hire: {
+                title: "作者岗扩编申请 (+1)",
+                body: "<b>背景：</b> 过去两周内容团队日均工作量 10.5 小时。<br><b>影响：</b> 批准后将进入招聘流程，预计每月增加支出 2.5 万元。<br><b>收益：</b> 解决双稿竞争时的交付延迟问题。",
+                onApprove: () => {
+                    document.getElementById('staff-count').innerText = "11 / 12";
+                    document.getElementById('brief-text').innerText = "扩编已批准，HRBP 已启动招聘。当前剩余 1 项待办。";
+                }
+            },
+            draft: {
+                title: "确认旗舰稿方向",
+                body: "<b>方向 A：</b> 深度行业观察（有助于提升品牌护城河）。<br><b>方向 B：</b> 工具操作指南（有助于提升全网传播量）。<br>编辑部建议选择 A，并由运营部辅以 B 版本的拆条。",
+                onApprove: () => {
+                    document.getElementById('target-pct').innerText = "75%";
+                    document.getElementById('progress-fill').style.width = "75%";
+                    document.getElementById('brief-text').innerText = "稿件方向已确定，团队正在进行终稿打磨。";
+                }
+            }
+        };
+
+        let currentDecisionId = null;
+        let solvedCount = 0;
+
+        function openModal(id) {
+            currentDecisionId = id;
+            document.getElementById('modal-title').innerText = data[id].title;
+            document.getElementById('modal-body').innerHTML = data[id].body;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function processDecision(action) {
+            // 执行数据变动
+            if (action === 'approve' && data[currentDecisionId].onApprove) {
+                data[currentDecisionId].onApprove();
+            }
+
+            // 视觉反馈
+            showToast(action === 'approve' ? "已批准并下达执行" : "已否决该项申请");
+            
+            // 移除已处理的项
+            const cards = document.querySelectorAll('.decision-card');
+            cards.forEach(card => {
+                if (card.getAttribute('onclick').includes(currentDecisionId)) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        card.remove();
+                        checkEmpty();
+                    }, 300);
+                }
+            });
+
+            closeModal();
+            solvedCount++;
+        }
+
+        function checkEmpty() {
+            const list = document.getElementById('decision-list');
+            if (list.children.length === 0) {
+                document.getElementById('empty-state').style.display = 'flex';
+                document.getElementById('main-greeting').innerText = "决策已完成。";
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 2000);
+        }
+    </script>
+</body>
+</html>

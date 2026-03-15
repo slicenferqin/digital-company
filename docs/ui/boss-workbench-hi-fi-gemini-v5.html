@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Empire · Emergence Console</title>
+    <style>
+        :root {
+            --bg: #0a0b0d;
+            --surface: #14161a;
+            --border: rgba(255,255,255,0.06);
+            --ink: #e2e8f0;
+            --accent: #d4af37; /* 黄金色，代表权力和资产 */
+            --subtle: #64748b;
+            --danger: #ef4444;
+        }
+
+        body {
+            margin: 0; background: var(--bg); color: var(--ink);
+            font-family: "Geist", "PingFang SC", sans-serif;
+            display: flex; height: 100vh; overflow: hidden;
+        }
+
+        /* 1. 世界状态条 - 模拟公司的“宏观指标” */
+        .world-state {
+            position: absolute; top: 0; width: 100%; height: 40px;
+            background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 20px; gap: 30px; font-size: 12px; z-index: 10;
+        }
+
+        /* 2. 主沙盘：Agent 社交与协作拓扑 */
+        .sandbox {
+            flex: 1; position: relative; padding: 60px 40px 40px;
+            display: grid; grid-template-columns: 1fr 340px; gap: 20px;
+        }
+
+        /* 模拟 Agent 的“社会网格” */
+        .entity-grid {
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zy4=');
+            position: relative; border-radius: 20px; border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .agent-avatar {
+            position: absolute; width: 120px; padding: 12px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .agent-avatar:hover { border-color: var(--accent); transform: scale(1.05); z-index: 5; }
+        .agent-avatar .indicator { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; margin-bottom: 8px; }
+        .agent-avatar strong { display: block; font-size: 13px; margin-bottom: 4px; }
+        .agent-avatar span { font-size: 10px; color: var(--subtle); }
+
+        /* 3. 组织动态 - 这里的日志不是 Task Log，而是“社会事件” */
+        .society-pulse {
+            background: var(--surface); border-radius: 20px; border: 1px solid var(--border);
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .panel-header { padding: 20px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; }
+        .event-list { flex: 1; padding: 20px; overflow-y: auto; font-size: 13px; }
+        .event-item { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .event-item .time { font-size: 10px; color: var(--subtle); margin-bottom: 5px; display: block; }
+        .event-item b { color: var(--accent); }
+
+        /* 4. 权力底座 - 老板的操控台 */
+        .command-bar {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(20, 22, 26, 0.8); backdrop-filter: blur(20px);
+            padding: 12px 30px; border-radius: 100px; border: 1px solid var(--accent);
+            display: flex; gap: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .cmd-btn { background: none; border: none; color: var(--ink); cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+        .cmd-btn:hover { color: var(--accent); }
+
+        /* 突发决策窗口 */
+        .incident-overlay {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; background: #fff; color: #000; padding: 30px; border-radius: 4px;
+            display: none; z-index: 100; box-shadow: 0 0 100px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="world-state">
+        <span><b>📅 公司周期:</b> 第 14 天</span>
+        <span><b>💰 每日预算:</b> 420.5 Token/s</span>
+        <span><b>🔥 组织熵值:</b> 12% (低风险)</span>
+        <span><b>📈 资产估值:</b> $1.2M</span>
+    </div>
+
+    <main class="sandbox">
+        <section class="entity-grid" id="entity-canvas">
+            <div class="agent-avatar" style="top: 20%; left: 15%;" onclick="showAgent('秘书长')">
+                <div class="indicator"></div>
+                <strong>秘书长 · 艾拉</strong>
+                <span>正在监听 3 个频道...</span>
+            </div>
+            <div class="agent-avatar" style="top: 45%; left: 40%;" onclick="showAgent('主笔作者')">
+                <div class="indicator" style="background: #fbbf24;"></div>
+                <strong>主笔 · 诺亚</strong>
+                <span>处于“创意枯竭”边缘</span>
+            </div>
+            <div class="agent-avatar" style="top: 15%; left: 60%;" onclick="showAgent('财务主管')">
+                <div class="indicator"></div>
+                <strong>财务 · 摩根</strong>
+                <span>正在计算 Q2 盈利模型</span>
+            </div>
+            
+            <svg style="position:absolute; width:100%; height:100%; pointer-events:none; opacity:0.2;">
+                <line x1="20%" y1="25%" x2="45%" y2="50%" stroke="white" stroke-dasharray="4"/>
+                <line x1="65%" y1="20%" x2="20%" y2="25%" stroke="white" stroke-dasharray="4"/>
+            </svg>
+        </section>
+
+        <aside class="society-pulse">
+            <div class="panel-header">
+                组织动态 (涌现事件)
+                <span style="color:var(--accent)">实时更新</span>
+            </div>
+            <div class="event-list" id="event-stream">
+                <div class="event-item">
+                    <span class="time">14:02:11</span>
+                    <b>[社会行为]</b> 秘书长艾拉发现主笔诺亚最近回复延迟，推测其可能存在情绪波动，已自动安排了一次虚拟咖啡。
+                </div>
+                <div class="event-item">
+                    <span class="time">13:50:45</span>
+                    <b>[规则触发]</b> 外部市场《AI 监管法案》发布，财务主管摩根自动调低了本周的风险资产配置比。
+                </div>
+                <div class="event-item">
+                    <span class="time">13:40:00</span>
+                    <b>[资产生成]</b> 运营 Agent 自动在 LinkedIn 发布了 3 篇测试帖，正在收集第一波“市场反馈”。
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <nav class="command-bar">
+        <button class="cmd-btn" onclick="triggerIncident()">📜 下达战略白皮书</button>
+        <button class="cmd-btn">🔍 介入 Agent 冲突</button>
+        <button class="cmd-btn">📊 调整组织规则</button>
+        <button class="cmd-btn">🚪 招募新 Agent</button>
+    </nav>
+
+    <div class="incident-overlay" id="incident-box">
+        <h3 style="margin-top:0">🚨 突发: 组织规则冲突</h3>
+        <p style="font-size: 14px; color: #444;">主笔 <b>诺亚</b> 认为当前的“自动化评审”规则限制了其创作自由，士气大幅下降。由于他是公司核心资产，请决定：</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <button onclick="resolve(1)" style="padding:10px; cursor:pointer;">1. 修改规则：给予诺亚 100% 创作自主权</button>
+            <button onclick="resolve(2)" style="padding:10px; cursor:pointer;">2. 维持现状：强调流程标准，引入新的协助 Agent</button>
+            <button onclick="resolve(3)" style="padding:10px; cursor:pointer; color:red;">3. 警告并重置：重置诺亚的性格参数</button>
+        </div>
+    </div>
+
+    <script>
+        function triggerIncident() {
+            document.getElementById('incident-box').style.display = 'block';
+        }
+
+        function resolve(type) {
+            document.getElementById('incident-box').style.display = 'none';
+            const log = document.getElementById('event-stream');
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.innerHTML = `<span class="time">NOW</span><b>[老板介入]</b> 决策已下达。组织正在重组信任链，预计 5 分钟后生效。`;
+            log.prepend(item);
+        }
+
+        function showAgent(name) {
+            alert(`正在建立与 ${name} 的私密链路...\n在此你可以查看其私有记忆、情绪曲线及未公开的草稿。`);
+        }
+        
+        // 模拟持续涌现
+        setInterval(() => {
+            const msgs = [
+                "<b>[生产动态]</b> 运营 Agent 在 Discord 捕获到一条关于品牌的新负面流言。",
+                "<b>[内部进化]</b> 财务主管与秘书长达成共识，决定优化 Token 分配算法。",
+                "<b>[意外产出]</b> 主笔诺亚在休息期间，利用私有内存生成了一份极具潜力的非正式方案。"
+            ];
+            const log = document.getElementById('event-stream');
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.innerHTML = `<span class="time">${new Date().toLocaleTimeString()}</span>${msgs[Math.floor(Math.random()*msgs.length)]}`;
+            log.prepend(item);
+            if(log.children.length > 8) log.lastChild.remove();
+        }, 5000);
+    </script>
+</body>
+</html>

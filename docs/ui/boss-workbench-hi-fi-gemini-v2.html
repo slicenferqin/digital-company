@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Boss Workbench Refactored</title>
+    <style>
+        :root {
+            --bg: #f8f6f2; /* 更轻盈的底色 */
+            --text: #1a1a1a;
+            --accent: #1d4ed8;
+            --line: rgba(0,0,0,0.06);
+            --radius: 24px;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            font-family: "SF Pro Text", "PingFang SC", serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 1. 侧边栏改为极简模式，减少左侧压迫感 */
+        .sidebar {
+            width: 80px;
+            background: #fff;
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            gap: 40px;
+        }
+
+        .logo { width: 40px; height: 40px; background: var(--text); border-radius: 12px; }
+
+        .nav-icons { display: flex; flex-direction: column; gap: 24px; }
+        .nav-icon { 
+            width: 48px; height: 48px; border-radius: 16px; 
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s; color: #888;
+        }
+        .nav-icon.active { background: var(--bg); color: var(--accent); }
+
+        /* 2. 主容器采用更加开放的布局 */
+        .main-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 360px; /* 主工作区 + 侧边资讯区 */
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .workspace {
+            padding: 40px 60px;
+            overflow-y: auto;
+        }
+
+        /* 降低标题负载：分行展示，重点突出 */
+        .header-group { margin-bottom: 48px; }
+        .header-group span { font-size: 14px; color: var(--accent); font-weight: 600; letter-spacing: 2px; }
+        .header-group h1 { 
+            font-family: "Iowan Old Style", serif; 
+            font-size: 48px; margin: 12px 0; font-weight: 700; 
+        }
+
+        /* 3. 信息卡片：使用更柔和的阴影和更大的内部空间 */
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--line);
+            transition: transform 0.3s ease;
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.03); }
+
+        .card-title {
+            font-family: "Iowan Old Style", serif;
+            font-size: 22px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* 4. 信息“降噪”处理：Inbox 列表不再平铺所有细节 */
+        .inbox-mini-item {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .inbox-mini-item:last-child { border: 0; }
+        .inbox-mini-item .info h4 { margin: 0; font-size: 16px; font-weight: 500; }
+        .inbox-mini-item .info p { margin: 4px 0 0; font-size: 13px; color: #888; }
+
+        /* 5. 侧边资讯栏：处理低频/参考类信息 */
+        .aside-panel {
+            background: #fff;
+            border-left: 1px solid var(--line);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .stat-block h5 { text-transform: uppercase; font-size: 12px; color: #aaa; margin-bottom: 16px; }
+        .stat-value { font-size: 32px; font-family: "Iowan Old Style", serif; }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 12px;
+            margin-right: 6px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="logo"></div>
+        <div class="nav-icons">
+            <div class="nav-icon active">📊</div>
+            <div class="nav-icon">📩</div>
+            <div class="nav-icon">👥</div>
+            <div class="nav-icon">📁</div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <section class="workspace">
+            <div class="header-group">
+                <span>MARCH 11, 2026</span>
+                <h1>早安，老板。<br>今日公司运转平稳。</h1>
+            </div>
+
+            <div class="section-grid">
+                <div class="card" style="grid-column: span 2;">
+                    <div class="card-title">待办决策 (3) <button style="font-size: 14px; background: none; border: none; color: var(--accent); cursor: pointer;">进入收件箱 →</button></div>
+                    <div class="inbox-mini-item">
+                        <div class="info">
+                            <h4>批准「作者岗」扩编申请</h4>
+                            <p>运营部发起 · 预计提升 22% 的产出带宽</p>
+                        </div>
+                        <button class="action-btn">查看详情</button>
+                    </div>
+                    <div class="inbox-mini-item">
+                        <div class="info">
+                            <h4>旗舰长文初稿：版本 A 还是 B？</h4>
+                            <p>编辑部发起 · A 侧重传播，B 侧重深度</p>
+                        </div>
+                        <button class="action-btn">查看详情</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">最新交付</div>
+                    <div style="background: var(--bg); height: 120px; border-radius: 12px; padding: 16px;">
+                        <span class="tag">长文</span>
+                        <h4 style="margin: 10px 0;">《AI 销售自动化的未来》</h4>
+                        <p style="font-size: 12px; color: #666;">作者 A 已提交预览版本...</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">风险监控</div>
+                    <p style="font-size: 14px; line-height: 1.6;">目前<b>作者岗</b>负载处于高位 (84%)，若不扩编，下周交付速度可能下降。</p>
+                </div>
+            </div>
+        </section>
+
+        <aside class="aside-panel">
+            <div class="stat-block">
+                <h5>公司脉搏 (Pulse)</h5>
+                <div class="stat-value">67% <small style="font-size: 14px; color: green;">↑ 12%</small></div>
+                <p style="font-size: 13px; color: #888;">本周目标完成度</p>
+            </div>
+
+            <div class="stat-block">
+                <h5>团队编制</h5>
+                <div class="stat-value">10 / 11</div>
+                <p style="font-size: 13px; color: #888;">1 位作者岗招聘中</p>
+            </div>
+
+            <div class="stat-block">
+                <h5>秘书简报</h5>
+                <div style="font-size: 14px; border-left: 2px solid var(--accent); padding-left: 12px; margin-top: 10px;">
+                    今日无外部会议，建议优先处理扩编申请。
+                </div>
+            </div>
+        </aside>
+    </main>
+
+</body>
+</html>

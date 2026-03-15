@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Hive · Boss Workbench</title>
+    <style>
+        :root {
+            --bg: #0d0e10; /* 深色背景，更有科技指挥感 */
+            --panel: #16181c;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --green: #10b981;
+            --amber: #f59e0b;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; background: var(--bg); color: var(--text);
+            font-family: "Inter", "PingFang SC", sans-serif;
+            height: 100vh; display: flex; overflow: hidden;
+        }
+
+        /* 侧边导航 - 垂直窄栏 */
+        nav {
+            width: 72px; border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; padding: 24px 0; gap: 32px;
+        }
+        .nav-item { 
+            width: 44px; height: 44px; border-radius: 12px; display: flex; 
+            align-items: center; justify-content: center; cursor: pointer; color: var(--text-dim);
+            transition: 0.3s; 
+        }
+        .nav-item:hover, .nav-item.active { background: var(--accent-glow); color: var(--accent); }
+
+        /* 主画布 */
+        main { flex: 1; display: grid; grid-template-rows: 80px 1fr 280px; }
+
+        /* 顶部栏 */
+        header { 
+            padding: 0 40px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .status-pill { background: rgba(16, 185, 129, 0.1); color: var(--green); padding: 4px 12px; border-radius: 99px; font-size: 12px; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+        /* 中心区域：Agent 协作视图 */
+        .stage { 
+            display: grid; grid-template-columns: 1fr 380px; gap: 1px; background: var(--border);
+            overflow: hidden;
+        }
+
+        /* Agent 节点网络 */
+        .agent-grid { 
+            background: var(--bg); padding: 40px; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;
+            overflow-y: auto;
+        }
+        .agent-card {
+            background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+            position: relative; overflow: hidden;
+        }
+        .agent-card.active::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        .agent-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .agent-name { font-weight: 600; font-size: 14px; }
+        .agent-status { font-size: 11px; color: var(--accent); }
+        .agent-task { font-size: 13px; color: var(--text-dim); line-height: 1.4; }
+
+        /* 右侧：实时日志流 (The Pulse) */
+        .pulse-log { background: var(--panel); display: flex; flex-direction: column; }
+        .log-header { padding: 20px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
+        .log-entries { flex: 1; padding: 20px; font-family: 'Courier New', monospace; font-size: 12px; overflow-y: auto; color: var(--text-dim); }
+        .log-entry { margin-bottom: 12px; border-left: 2px solid var(--border); padding-left: 10px; animation: fadeIn 0.5s ease; }
+        .log-entry b { color: var(--accent); }
+
+        /* 底部：控制中心与资产流水线 */
+        footer { 
+            background: var(--panel); border-top: 1px solid var(--border); 
+            display: grid; grid-template-columns: 400px 1fr; gap: 40px; padding: 30px 40px;
+        }
+
+        /* 决策卡片预览 */
+        .decision-tray { display: flex; flex-direction: column; gap: 16px; }
+        .decision-item {
+            background: rgba(59, 130, 246, 0.15); border: 1px solid var(--accent);
+            padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .decision-info h4 { margin: 0 0 4px 0; font-size: 14px; }
+        .decision-info p { margin: 0; font-size: 12px; color: var(--text-dim); }
+
+        /* 资产流水线 */
+        .pipeline { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; }
+        .pipe-node {
+            min-width: 180px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 12px; padding: 15px; position: relative;
+        }
+        .pipe-node::after { content: '→'; position: absolute; right: -15px; top: 45%; color: var(--border); }
+        .pipe-node:last-child::after { content: ''; }
+        .pipe-node h5 { margin: 0 0 8px 0; font-size: 11px; text-transform: uppercase; color: var(--text-dim); }
+        .pipe-node .content { font-size: 12px; font-weight: 500; }
+
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-item active">🛰️</div>
+        <div class="nav-item">👥</div>
+        <div class="nav-item">📂</div>
+        <div class="nav-item">⚙️</div>
+    </nav>
+
+    <main>
+        <header>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <h2 style="font-size:18px; margin:0;">数字公司控制台 v4.0</h2>
+                <div class="status-pill">系统心跳: 120ms</div>
+                <div style="font-size:12px; color:var(--text-dim);">运行中 Agent: 12</div>
+            </div>
+            <div style="display:flex; gap:24px;">
+                <div style="text-align:right;"><div style="font-size:10px; color:var(--text-dim);">今日消耗 Token</div><div style="font-size:16px; font-weight:700;">1,240k</div></div>
+                <div style="text-align:right;"><div style="font-size:10px; color:var(--text-dim);">当前并发任务</div><div style="font-size:16px; font-weight:700; color:var(--accent);">4</div></div>
+            </div>
+        </header>
+
+        <section class="stage">
+            <div class="agent-grid" id="agent-grid">
+                </div>
+            <div class="pulse-log">
+                <div class="log-header">实时协作日志 (Real-time Pulse)</div>
+                <div class="log-entries" id="log-entries">
+                    <div class="log-entry"><b>系统</b> 初始化协作协议完成...</div>
+                    <div class="log-entry"><b>秘书长</b> 正在整理晨间简报...</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="decision-tray">
+                <span class="module-label">最高决策指令 (Pending)</span>
+                <div class="decision-item">
+                    <div class="decision-info">
+                        <h4>批准扩编作者岗位?</h4>
+                        <p>这会解除当前的内容交付瓶颈</p>
+                    </div>
+                    <button class="btn-primary" onclick="executeDecision('扩编批准')">执行</button>
+                </div>
+            </div>
+            <div>
+                <span class="module-label">生产流水线 (Pipeline)</span>
+                <div class="pipeline">
+                    <div class="pipe-node"><h5>研究阶段</h5><div class="content">竞品数据已就绪</div></div>
+                    <div class="pipe-node"><h5>初稿生成</h5><div class="content" style="color:var(--accent);">Agent 正在编写 (45%)</div></div>
+                    <div class="pipe-node"><h5>同行评审</h5><div class="content">待启动</div></div>
+                    <div class="pipe-node"><h5>分发优化</h5><div class="content">待启动</div></div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const agents = [
+            { name: "秘书长", role: "管理层", task: "监控系统资源，分配 Token 预算", status: "分析中" },
+            { name: "首席研究员", role: "执行层", task: "抓取 20 份行业报告进行交叉验证", status: "检索中" },
+            { name: "创意作者 A", role: "生成层", task: "正在重写长文第二章：AI 伦理部分", status: "工作中" },
+            { name: "创意作者 B", role: "生成层", task: "待命：准备接手分发拆条", status: "休眠" },
+            { name: "事实核查员", role: "质检层", task: "扫描初稿中的数据准确性", status: "等待中" },
+            { name: "分发运营", role: "分发层", task: "配置 LinkedIn 与 Twitter 自动化流", status: "配置中" }
+        ];
+
+        function renderAgents() {
+            const grid = document.getElementById('agent-grid');
+            grid.innerHTML = agents.map(a => `
+                <div class="agent-card ${a.status === '工作中' || a.status === '分析中' ? 'active' : ''}">
+                    <div class="agent-header">
+                        <span class="agent-name">${a.name}</span>
+                        <span class="agent-status">${a.status}</span>
+                    </div>
+                    <div style="font-size:10px; color:var(--accent); margin-bottom:8px;">${a.role}</div>
+                    <div class="agent-task">${a.task}</div>
+                </div>
+            `).join('');
+        }
+
+        const logMessages = [
+            "<b>研究员</b> 发现 3 个高价值竞争对手动向",
+            "<b>作者 A</b> 完成了 1500 字初稿创作",
+            "<b>秘书长</b> 提醒：Token 消耗速度超出预期",
+            "<b>事实核查员</b> 标记了 2 处潜在逻辑错误",
+            "<b>系统</b> 自动调整了任务优先级：长文 > 社媒",
+            "<b>运营</b> 正在预热社交平台账号..."
+        ];
+
+        function addLog() {
+            const logs = document.getElementById('log-entries');
+            const msg = logMessages[Math.floor(Math.random() * logMessages.length)];
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logs.prepend(div);
+            if(logs.children.length > 20) logs.lastChild.remove();
+        }
+
+        function executeDecision(name) {
+            alert("指令已下达: " + name + "。Agent 团队已接收并更新策略。");
+        }
+
+        setInterval(addLog, 3000);
+        renderAgents();
+    </script>
+</body>
+</html>

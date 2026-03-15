@@ -1,0 +1,379 @@
+:root {
+  --bg: #f5f1e8;
+  --surface: rgba(255, 252, 247, 0.92);
+  --panel: rgba(255, 255, 255, 0.84);
+  --line: rgba(43, 43, 43, 0.1);
+  --text: #1a1a1a;
+  --text-secondary: #58544d;
+  --accent: #1d4ed8;
+  --shadow-soft: 0 20px 40px rgba(71, 58, 32, 0.08);
+  --shadow-card: 0 10px 24px rgba(71, 58, 32, 0.05);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(29, 78, 216, 0.05), transparent 30%),
+    linear-gradient(180deg, #f8f5ef 0%, #f1ebdf 100%);
+  color: var(--text);
+  font-family:
+    "SF Pro Text",
+    "PingFang SC",
+    "Noto Sans SC",
+    "Helvetica Neue",
+    sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(84, 72, 49, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(84, 72, 49, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+button {
+  font: inherit;
+}
+
+.shell {
+  width: min(1480px, calc(100vw - 40px));
+  margin: 20px auto;
+  min-height: calc(100vh - 40px);
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+}
+
+.sidebar,
+.workspace {
+  border: 1px solid var(--line);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-soft);
+}
+
+.sidebar {
+  border-radius: 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 250, 243, 0.88),
+    rgba(249, 243, 231, 0.92)
+  );
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.brand h1,
+.hero h2,
+.panel h3 {
+  font-family:
+    "Iowan Old Style",
+    "Palatino Linotype",
+    "Songti SC",
+    "STSong",
+    serif;
+}
+
+.brand {
+  display: grid;
+  gap: 12px;
+}
+
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text-secondary);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.brand p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.nav {
+  display: grid;
+  gap: 8px;
+}
+
+.navItem {
+  text-align: left;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.navItem strong {
+  display: block;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.navItem span {
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.navItem.active {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(252, 247, 240, 0.98)
+  );
+  border-color: rgba(29, 78, 216, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), var(--shadow-card);
+}
+
+.sideCard,
+.panel {
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+.sideCard {
+  padding: 20px;
+}
+
+.sideCard h2 {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.facts {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+
+.facts div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.facts dt,
+.facts dd {
+  margin: 0;
+  font-size: 13px;
+}
+
+.facts dt {
+  color: var(--text-secondary);
+}
+
+.workspace {
+  border-radius: 36px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 252, 247, 0.96),
+    rgba(250, 247, 241, 0.96)
+  );
+  padding: 28px;
+  display: grid;
+  gap: 24px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.hero h2 {
+  margin: 0 0 14px;
+  font-size: 44px;
+  line-height: 1;
+  max-width: 760px;
+}
+
+.lede {
+  margin: 0;
+  max-width: 760px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.primaryButton,
+.secondaryButton {
+  border-radius: 999px;
+  padding: 12px 20px;
+}
+
+.primaryButton {
+  background: var(--text);
+  color: #fff;
+  border: 0;
+}
+
+.secondaryButton {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.panel {
+  padding: 24px;
+}
+
+.panel h3 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.numberedList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.numberedList li {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.numberedList span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(29, 78, 216, 0.1);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.numberedList p,
+.miniCard p,
+.signal p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.cardStack,
+.signalStack {
+  display: grid;
+  gap: 12px;
+}
+
+.miniCard,
+.signal {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line);
+}
+
+.miniCard strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+@media (max-width: 1100px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .hero,
+  .contentGrid {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100vw - 20px, 1480px);
+    margin: 10px auto;
+  }
+
+  .sidebar,
+  .workspace {
+    border-radius: 24px;
+  }
+
+  .hero h2 {
+    font-size: 34px;
+  }
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Enterprise · Production Sandbox</title>
+    <style>
+        :root {
+            --bg: #f4f1ea;
+            --sidebar: #2c2e33;
+            --panel: #ffffff;
+            --accent: #1d4ed8;
+            --ink: #1a1a1a;
+            --dim: #71717a;
+            --border: rgba(0,0,0,0.08);
+            --gold: #b59410;
+        }
+
+        * { box-sizing: border-box; transition: all 0.2s ease; }
+        body {
+            margin: 0; background: var(--bg); color: var(--ink);
+            font-family: "Inter", "PingFang SC", sans-serif;
+            display: flex; height: 100vh; overflow: hidden;
+        }
+
+        /* 侧边：资产与历史仓库 (证明这不是游戏) */
+        .sidebar {
+            width: 260px; background: var(--sidebar); color: #fff;
+            display: flex; flex-direction: column; padding: 20px;
+        }
+        .sidebar h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 20px; }
+        .artifact-card {
+            background: rgba(255,255,255,0.05); padding: 12px; border-radius: 6px;
+            margin-bottom: 12px; font-size: 13px; cursor: pointer; border: 1px solid transparent;
+        }
+        .artifact-card:hover { border-color: var(--accent); background: rgba(255,255,255,0.1); }
+        .artifact-card small { display: block; color: #888; margin-top: 4px; }
+
+        /* 主工作区 */
+        .main-stage { flex: 1; display: grid; grid-template-rows: 64px 1fr 220px; }
+
+        /* 顶部：公司即时指标 */
+        header { 
+            background: #fff; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
+        }
+        .metric { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; }
+        .metric b { color: var(--accent); }
+
+        /* 中间：组织观察窗 (Simulation layer) */
+        .viewport { 
+            padding: 30px; display: grid; grid-template-columns: 1fr 320px; gap: 30px;
+            overflow: hidden;
+        }
+        
+        /* 组织网格：展示 Agent 间的关系与当前动作 */
+        .org-chart { 
+            background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+            padding: 30px; position: relative; overflow: auto;
+        }
+        .agent-pill {
+            background: var(--bg); border: 1px solid var(--border); padding: 16px;
+            border-radius: 12px; width: 200px; position: absolute; cursor: pointer;
+        }
+        .agent-pill.focus { border-color: var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .agent-pill strong { display: block; font-size: 14px; }
+        .agent-pill span { font-size: 11px; color: var(--dim); }
+        .mood-bar { height: 3px; background: #ddd; margin-top: 10px; border-radius: 2px; overflow: hidden; }
+        .mood-fill { height: 100%; background: var(--accent); }
+
+        /* 右侧日志：不仅是日志，更是“公司简报” */
+        .briefing { 
+            background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+            display: flex; flex-direction: column; 
+        }
+        .log-item { padding: 15px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.5; }
+        .log-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
+        .tag-event { background: #e0e7ff; color: #4338ca; }
+        .tag-asset { background: #dcfce7; color: #15803d; }
+
+        /* 底部：战略决策面板 */
+        .controls { 
+            background: #fff; border-top: 1px solid var(--border); 
+            padding: 20px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+        }
+        .control-group h3 { font-size: 12px; color: var(--dim); text-transform: uppercase; margin-bottom: 15px; }
+        .btn-row { display: flex; gap: 12px; }
+        button { 
+            padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
+            background: #fff; font-size: 13px; cursor: pointer; font-weight: 500;
+        }
+        button:hover { background: var(--bg); border-color: var(--accent); }
+        button.primary { background: var(--ink); color: #fff; border: none; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>公司资产库 (Knowledge Assets)</h2>
+        <div class="artifact-card">
+            <strong>核心策略分析 V2.docx</strong>
+            <small>由 秘书长 & 研究员 共同生成 · 2小时前</small>
+        </div>
+        <div class="artifact-card">
+            <strong>全网舆情监控日报</strong>
+            <small>自动涌现产物 · 今天 09:00</small>
+        </div>
+        <div class="artifact-card" style="opacity: 0.5;">
+            <strong>待解锁：Q3 招聘计划</strong>
+            <small>需组织熵值维持在 15% 以下</small>
+        </div>
+    </aside>
+
+    <main class="main-stage">
+        <header>
+            <div style="display:flex; gap:30px;">
+                <div class="metric">组织熵值: <b>14.2%</b></div>
+                <div class="metric">现金流 (Tokens): <b>2.4M</b></div>
+                <div class="metric">品牌声望: <b>88/100</b></div>
+            </div>
+            <div style="font-size: 13px; color: var(--dim);">Digital Company v5.0 · 自动运行中</div>
+        </header>
+
+        <section class="viewport">
+            <div class="org-chart">
+                <div class="agent-pill focus" style="top: 40px; left: 40px;">
+                    <strong>秘书长 · 艾拉</strong>
+                    <span>状态: 协调资源中</span>
+                    <div class="mood-bar"><div class="mood-fill" style="width: 85%;"></div></div>
+                </div>
+
+                <div class="agent-pill" style="top: 180px; left: 120px;">
+                    <strong>主笔 · 诺亚</strong>
+                    <span>状态: 正在改写第二章</span>
+                    <div class="mood-bar"><div class="mood-fill" style="width: 42%; background: #ef4444;"></div></div>
+                </div>
+
+                <div class="agent-pill" style="top: 60px; left: 300px;">
+                    <strong>研究员 · 摩根</strong>
+                    <span>状态: 扫描外部信号</span>
+                    <div class="mood-bar"><div class="mood-fill" style="width: 70%;"></div></div>
+                </div>
+
+                <div style="position: absolute; bottom: 20px; left: 20px; font-size: 11px; color: var(--gold); background: rgba(181, 148, 16, 0.05); padding: 10px; border: 1px solid var(--gold); border-radius: 4px;">
+                    💡 <b>穿透观察:</b> 秘书长艾拉私下拦截了主笔诺亚的辞职草稿，正尝试通过调整分配逻辑挽留。
+                </div>
+            </div>
+
+            <div class="briefing">
+                <div style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 14px;">公司演化简报</div>
+                <div class="log-item">
+                    <span class="log-tag tag-event">涌现</span>
+                    主笔与研究员自发建立了“快速同步”规则，内容生成效率提升 15%。
+                </div>
+                <div class="log-item">
+                    <span class="log-tag tag-asset">产出</span>
+                    《数字劳动力白皮书》初稿已由系统自动推送到资产库。
+                </div>
+                <div class="log-item">
+                    <span class="log-tag tag-event">冲突</span>
+                    财务 Agent 拒绝了主笔的算力加成申请，理由是 Q2 预算收紧。
+                </div>
+            </div>
+        </section>
+
+        <footer class="controls">
+            <div class="control-group">
+                <h3>战略指令 (Global Mandates)</h3>
+                <div class="btn-row">
+                    <button class="primary" onclick="alert('战略方向已切换至：增长优先')">切换为：增长优先模式</button>
+                    <button onclick="alert('已下达全员审计指令')">启动：规则合规性审计</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <h3>组织调控 (Orchestration)</h3>
+                <div class="btn-row">
+                    <button>干预 Agent 冲突</button>
+                    <button>修改 Token 分配权重</button>
+                    <button style="color: #ef4444;">重置组织记忆</button>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+</body>
+</html>

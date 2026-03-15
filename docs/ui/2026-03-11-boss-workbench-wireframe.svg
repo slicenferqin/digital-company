@@ -1,0 +1,120 @@
+<svg width="1800" height="1360" viewBox="0 0 1800 1360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1800" height="1360" fill="#F7F4EE"/>
+  <text x="60" y="70" font-family="Inter, Noto Sans SC, sans-serif" font-size="32" font-weight="700" fill="#1F2937">Digital Company · Boss Workbench Wireframe</text>
+  <text x="60" y="104" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" fill="#6B7280">交付给用户的不是“Agent 列表”，而是一个面向老板的经营工作台：看经营、做决策、收成果、管组织。</text>
+
+  <!-- Screen 1 -->
+  <rect x="60" y="150" width="810" height="540" rx="24" fill="#FFFDFC" stroke="#D1D5DB" stroke-width="2"/>
+  <text x="90" y="192" font-family="Inter, Noto Sans SC, sans-serif" font-size="22" font-weight="700" fill="#111827">1. Boss Workbench / 经营总览</text>
+  <rect x="90" y="215" width="750" height="54" rx="12" fill="#F3F4F6" stroke="#D1D5DB"/>
+  <text x="110" y="248" font-family="Inter, Noto Sans SC, sans-serif" font-size="15" fill="#374151">Logo · 公司切换器 · 本周目标 · 预算剩余 · 今日阻塞 · 主 CTA: 处理待决策事项</text>
+  <rect x="90" y="290" width="140" height="360" rx="18" fill="#F9FAFB" stroke="#D1D5DB"/>
+  <text x="110" y="325" font-family="Inter, Noto Sans SC, sans-serif" font-size="15" font-weight="600" fill="#111827">导航</text>
+  <text x="110" y="360" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">总览</text>
+  <text x="110" y="392" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">管理者收件箱</text>
+  <text x="110" y="424" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">项目与交付物</text>
+  <text x="110" y="456" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">团队与绩效</text>
+  <text x="110" y="488" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">招聘与扩编</text>
+  <text x="110" y="520" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">组织时间线</text>
+  <text x="110" y="552" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">制度设置</text>
+  <rect x="250" y="290" width="590" height="100" rx="18" fill="#FCFBF7" stroke="#D1D5DB"/>
+  <text x="274" y="322" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#111827">北极星摘要带</text>
+  <text x="274" y="350" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">本周交付：8/12 · 待审批：3 · 被阻塞：1 · 一次通过率：71% · 人力负载：82%</text>
+  <rect x="250" y="410" width="284" height="240" rx="18" fill="#FCFBF7" stroke="#D1D5DB"/>
+  <text x="274" y="442" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#111827">今天公司发生了什么</text>
+  <text x="274" y="472" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">09:10 研究员A 提交竞品扫描</text>
+  <text x="274" y="500" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">11:30 作者A / 作者B 双稿竞争</text>
+  <text x="274" y="528" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">14:00 编辑B 打回品牌不一致稿件</text>
+  <text x="274" y="556" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">16:20 COO 请求新增 1 名作者编制</text>
+  <rect x="556" y="410" width="284" height="112" rx="18" fill="#FFF7ED" stroke="#F59E0B"/>
+  <text x="580" y="442" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#92400E">老板现在该做什么</text>
+  <text x="580" y="472" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#78350F">批准：专题方向 A / B</text>
+  <text x="580" y="498" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#78350F">决定：是否扩编作者岗</text>
+  <rect x="556" y="538" width="284" height="112" rx="18" fill="#ECFDF5" stroke="#10B981"/>
+  <text x="580" y="570" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#065F46">新交付物</text>
+  <text x="580" y="600" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#065F46">1 篇长文初稿 · 5 条社媒文案</text>
+  <text x="580" y="626" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#065F46">1 份竞争观察摘要</text>
+
+  <!-- Screen 2 -->
+  <rect x="930" y="150" width="810" height="540" rx="24" fill="#FFFDFC" stroke="#D1D5DB" stroke-width="2"/>
+  <text x="960" y="192" font-family="Inter, Noto Sans SC, sans-serif" font-size="22" font-weight="700" fill="#111827">2. Manager Inbox / 决策与审批</text>
+  <rect x="960" y="215" width="750" height="54" rx="12" fill="#F3F4F6" stroke="#D1D5DB"/>
+  <text x="980" y="248" font-family="Inter, Noto Sans SC, sans-serif" font-size="15" fill="#374151">筛选：优先级冲突 / 方向分歧 / 招聘申请 / 关键稿件审批</text>
+  <rect x="960" y="292" width="270" height="360" rx="18" fill="#F9FAFB" stroke="#D1D5DB"/>
+  <text x="984" y="326" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#111827">收件箱列表</text>
+  <text x="984" y="362" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">[P1] 选题方向冲突</text>
+  <text x="984" y="390" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">[P1] 新增作者岗申请</text>
+  <text x="984" y="418" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">[P2] 重要长文待审批</text>
+  <text x="984" y="446" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">[P2] 编辑标准争议</text>
+  <rect x="1250" y="292" width="460" height="360" rx="18" fill="#FCFBF7" stroke="#D1D5DB"/>
+  <text x="1274" y="326" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#111827">事项详情</text>
+  <text x="1274" y="360" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">事项：是否批准新增 1 名作者编制</text>
+  <text x="1274" y="388" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">提出者：COO · 原因：本周高质量稿件积压</text>
+  <text x="1274" y="416" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">影响：预计吞吐 +22%，预算压力 +1 档</text>
+  <rect x="1274" y="450" width="190" height="100" rx="16" fill="#F9FAFB" stroke="#D1D5DB"/>
+  <text x="1290" y="482" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" font-weight="600" fill="#111827">方案 A</text>
+  <text x="1290" y="510" font-family="Inter, Noto Sans SC, sans-serif" font-size="13" fill="#4B5563">立即扩编</text>
+  <text x="1290" y="536" font-family="Inter, Noto Sans SC, sans-serif" font-size="13" fill="#4B5563">加速本周交付</text>
+  <rect x="1486" y="450" width="190" height="100" rx="16" fill="#F9FAFB" stroke="#D1D5DB"/>
+  <text x="1502" y="482" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" font-weight="600" fill="#111827">方案 B</text>
+  <text x="1502" y="510" font-family="Inter, Noto Sans SC, sans-serif" font-size="13" fill="#4B5563">延后扩编</text>
+  <text x="1502" y="536" font-family="Inter, Noto Sans SC, sans-serif" font-size="13" fill="#4B5563">先压缩低优项目</text>
+  <rect x="1274" y="580" width="126" height="42" rx="12" fill="#111827"/>
+  <text x="1311" y="607" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#FFFFFF">批准 A</text>
+  <rect x="1412" y="580" width="126" height="42" rx="12" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="1448" y="607" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#111827">批准 B</text>
+  <rect x="1550" y="580" width="126" height="42" rx="12" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="1590" y="607" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#111827">稍后处理</text>
+
+  <!-- Screen 3 -->
+  <rect x="60" y="750" width="810" height="540" rx="24" fill="#FFFDFC" stroke="#D1D5DB" stroke-width="2"/>
+  <text x="90" y="792" font-family="Inter, Noto Sans SC, sans-serif" font-size="22" font-weight="700" fill="#111827">3. Artifact Center / 交付物中心</text>
+  <rect x="90" y="815" width="750" height="54" rx="12" fill="#F3F4F6" stroke="#D1D5DB"/>
+  <text x="110" y="848" font-family="Inter, Noto Sans SC, sans-serif" font-size="15" fill="#374151">筛选：策略卡 / 选题 brief / 长文初稿 / 社媒文案 / 研究摘要 / 周报</text>
+  <rect x="90" y="892" width="230" height="360" rx="18" fill="#F9FAFB" stroke="#D1D5DB"/>
+  <text x="114" y="926" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#111827">交付列表</text>
+  <text x="114" y="962" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">长文初稿 · 作者A</text>
+  <text x="114" y="990" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">长文初稿 · 作者B</text>
+  <text x="114" y="1018" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">社媒文案包 · 运营</text>
+  <text x="114" y="1046" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">竞品研究摘要 · 研究员A</text>
+  <rect x="340" y="892" width="500" height="360" rx="18" fill="#FCFBF7" stroke="#D1D5DB"/>
+  <text x="364" y="926" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#111827">交付物预览</text>
+  <rect x="364" y="952" width="452" height="210" rx="14" fill="#FFFFFF" stroke="#D1D5DB" stroke-dasharray="6 6"/>
+  <text x="390" y="988" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#6B7280">文章标题 / 结构 / 正文预览 / 编辑意见 / 版本差异</text>
+  <rect x="364" y="1182" width="100" height="42" rx="12" fill="#111827"/>
+  <text x="397" y="1209" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#FFFFFF">通过</text>
+  <rect x="478" y="1182" width="100" height="42" rx="12" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="509" y="1209" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#111827">打回</text>
+  <rect x="592" y="1182" width="100" height="42" rx="12" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="619" y="1209" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#111827">批注</text>
+  <rect x="706" y="1182" width="110" height="42" rx="12" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="728" y="1209" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#111827">设为模板</text>
+
+  <!-- Screen 4 -->
+  <rect x="930" y="750" width="810" height="540" rx="24" fill="#FFFDFC" stroke="#D1D5DB" stroke-width="2"/>
+  <text x="960" y="792" font-family="Inter, Noto Sans SC, sans-serif" font-size="22" font-weight="700" fill="#111827">4. Team & Hiring / 团队与招聘</text>
+  <rect x="960" y="815" width="750" height="54" rx="12" fill="#F3F4F6" stroke="#D1D5DB"/>
+  <text x="980" y="848" font-family="Inter, Noto Sans SC, sans-serif" font-size="15" fill="#374151">团队视图 / 绩效排行 / 负载热力 / 候选人 shortlist / 试用期状态</text>
+  <rect x="960" y="892" width="300" height="360" rx="18" fill="#F9FAFB" stroke="#D1D5DB"/>
+  <text x="984" y="926" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#111827">团队编制</text>
+  <text x="984" y="962" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">作者A · 高产 · 返工高</text>
+  <text x="984" y="990" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">作者B · 稳定 · 通过率高</text>
+  <text x="984" y="1018" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">编辑A · 严格 · 速度慢</text>
+  <text x="984" y="1046" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">编辑B · 快速 · 标准宽松</text>
+  <text x="984" y="1074" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#4B5563">研究员A / B · 用户 / 竞品双线</text>
+  <rect x="1280" y="892" width="430" height="168" rx="18" fill="#FFF7ED" stroke="#F59E0B"/>
+  <text x="1304" y="926" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#92400E">扩编申请</text>
+  <text x="1304" y="958" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#78350F">岗位：作者 · 原因：高质量内容产能不足</text>
+  <text x="1304" y="986" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#78350F">候选人：3 名 · 推荐：风格补位型作者</text>
+  <rect x="1304" y="1008" width="120" height="38" rx="12" fill="#111827"/>
+  <text x="1333" y="1032" font-family="Inter, Noto Sans SC, sans-serif" font-size="13" fill="#FFFFFF">查看 shortlist</text>
+  <rect x="1280" y="1084" width="430" height="168" rx="18" fill="#ECFDF5" stroke="#10B981"/>
+  <text x="1304" y="1118" font-family="Inter, Noto Sans SC, sans-serif" font-size="16" font-weight="600" fill="#065F46">候选人卡</text>
+  <text x="1304" y="1150" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#065F46">候选人 C · 作者岗 · 擅长深度长文</text>
+  <text x="1304" y="1178" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#065F46">速度 6 / 质量 9 / 协作 8 / 风险：保守</text>
+  <text x="1304" y="1206" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#065F46">附：试稿样本 + 预计成本档位</text>
+
+  <!-- callouts -->
+  <rect x="60" y="1305" width="1680" height="28" rx="10" fill="#E5E7EB"/>
+  <text x="80" y="1324" font-family="Inter, Noto Sans SC, sans-serif" font-size="14" fill="#374151">核心产品判断：它是 “Boss Operating System”，不是一个普通 dashboard，也不是一个 agent 群聊界面。</text>
+</svg>

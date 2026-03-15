@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boss Workbench Balanced · Digital Company</title>
+    <style>
+      :root {
+        --bg: #f5f1e8;
+        --surface: rgba(255, 252, 247, 0.9);
+        --surface-strong: rgba(255, 255, 255, 0.98);
+        --surface-muted: #f4eee4;
+        --panel: #fbf7f0;
+        --line: rgba(43, 43, 43, 0.1);
+        --line-strong: rgba(43, 43, 43, 0.18);
+        --text: #1a1a1a;
+        --text-secondary: #52504c;
+        --text-tertiary: #8f8a81;
+        --accent: #1d4ed8;
+        --accent-soft: rgba(29, 78, 216, 0.08);
+        --amber: #cb7e2d;
+        --amber-soft: rgba(203, 126, 45, 0.12);
+        --green: #1f7a55;
+        --green-soft: rgba(31, 122, 85, 0.12);
+        --red: #b85c4d;
+        --red-soft: rgba(184, 92, 77, 0.1);
+        --shadow-soft: 0 20px 40px rgba(71, 58, 32, 0.06);
+        --shadow-card: 0 10px 24px rgba(71, 58, 32, 0.05);
+        --shadow-hover: 0 16px 32px rgba(41, 43, 59, 0.1);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+        --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 35%),
+          radial-gradient(circle at bottom right, rgba(29, 78, 216, 0.05), transparent 30%),
+          linear-gradient(180deg, #f8f5ef 0%, #f1ebdf 100%);
+        color: var(--text);
+        font-family:
+          "SF Pro Text",
+          "PingFang SC",
+          "Noto Sans SC",
+          "Helvetica Neue",
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.3;
+        background-image:
+          linear-gradient(rgba(84, 72, 49, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(84, 72, 49, 0.02) 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+        border: 0;
+        outline: none;
+      }
+
+      .shell {
+        width: min(1680px, calc(100vw - 40px));
+        margin: 20px auto;
+        min-height: calc(100vh - 40px);
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 20px;
+      }
+
+      .sidebar,
+      .workspace {
+        border: 1px solid var(--line);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .sidebar {
+        border-radius: 30px;
+        background: linear-gradient(180deg, rgba(255, 250, 243, 0.85), rgba(249, 243, 231, 0.9));
+        padding: 28px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .brand {
+        padding: 8px 10px 14px;
+      }
+
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.85);
+        color: var(--text-secondary);
+        border: 1px solid var(--line);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+      }
+
+      .brand h1,
+      .title-serif,
+      .section-title,
+      .metric-value,
+      .detail-hero h2 {
+        font-family:
+          "Iowan Old Style",
+          "Palatino Linotype",
+          "Songti SC",
+          "STSong",
+          serif;
+      }
+
+      .brand h1 {
+        margin: 18px 0 10px;
+        font-size: 34px;
+        line-height: 1.02;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+      }
+
+      .brand p {
+        margin: 0;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        font-size: 14px;
+      }
+
+      .nav-group {
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav-item {
+        text-align: left;
+        padding: 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-secondary);
+        transition: all var(--transition-fast);
+      }
+
+      .nav-item strong {
+        display: block;
+        color: var(--text);
+        font-size: 15px;
+        margin-bottom: 6px;
+        transition: color var(--transition-fast);
+      }
+
+      .nav-item span {
+        display: block;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .nav-item:hover,
+      .nav-item:focus-visible {
+        background: rgba(255, 255, 255, 0.6);
+        border-color: var(--line);
+        outline: none;
+      }
+
+      .nav-item.active {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(252, 247, 240, 0.98));
+        border-color: rgba(29, 78, 216, 0.25);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), var(--shadow-card);
+        color: var(--text);
+      }
+
+      .nav-item.active strong {
+        color: var(--accent);
+      }
+
+      .sidebar-card {
+        padding: 20px;
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--line);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      }
+
+      .sidebar-card h3 {
+        margin: 0 0 16px;
+        font-size: 14px;
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .pulse-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        border-top: 1px dashed rgba(0, 0, 0, 0.08);
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .pulse-row:first-of-type {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .workspace {
+        border-radius: 36px;
+        background: linear-gradient(180deg, rgba(255, 252, 247, 0.96), rgba(250, 247, 241, 0.96));
+        padding: 24px;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 24px;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: 24px;
+      }
+
+      .topbar-card,
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-card);
+        padding: 28px;
+        transition: transform var(--transition-base), box-shadow var(--transition-base);
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: flex-start;
+      }
+
+      .hero-copy h2 {
+        margin: 16px 0 12px;
+        font-size: 46px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy p {
+        margin: 0;
+        max-width: 760px;
+        color: var(--text-secondary);
+        line-height: 1.75;
+        font-size: 16px;
+      }
+
+      .capsule-row,
+      .actions-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .capsule {
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid var(--line);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      .primary-action,
+      .secondary-action {
+        border-radius: 999px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.2;
+        transition: all var(--transition-fast);
+      }
+
+      .primary-action {
+        background: var(--text);
+        color: white;
+        box-shadow: 0 12px 24px rgba(26, 26, 26, 0.15);
+      }
+
+      .primary-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 32px rgba(26, 26, 26, 0.25);
+        background: #333;
+      }
+
+      .secondary-action {
+        background: white;
+        color: var(--text);
+        border: 1px solid var(--line);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      }
+
+      .secondary-action:hover {
+        background: #fafafa;
+        border-color: var(--line-strong);
+        transform: translateY(-1px);
+      }
+
+      .mini-stats {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .mini-stat {
+        border-radius: var(--radius-lg);
+        padding: 16px 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--line);
+      }
+
+      .mini-stat span {
+        display: block;
+        font-size: 13px;
+        color: var(--text-tertiary);
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .mini-stat strong {
+        font-size: 28px;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 12px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .brief-sheet {
+        min-height: 100%;
+        border-radius: 26px;
+        padding: 22px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 244, 233, 0.92));
+        border: 1px solid var(--line);
+        display: grid;
+        gap: 16px;
+      }
+
+      .brief-sheet h3 {
+        margin: 0;
+        font-size: 34px;
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .brief-sheet p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.72;
+      }
+
+      .brief-steps {
+        display: grid;
+        gap: 12px;
+      }
+
+      .brief-step {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 12px;
+        align-items: flex-start;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(0, 0, 0, 0.08);
+      }
+
+      .brief-step:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .brief-step strong {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        background: rgba(29, 78, 216, 0.08);
+        color: var(--accent);
+        font-size: 14px;
+      }
+
+      .focus-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .focus-item {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 14px;
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid var(--line);
+      }
+
+      .focus-index {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: rgba(203, 126, 45, 0.12);
+        color: #8c5418;
+        font-weight: 700;
+      }
+
+      .focus-item strong {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 6px;
+      }
+
+      .focus-item p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.72;
+        color: var(--text-secondary);
+      }
+
+      .quiet-list {
+        margin: 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .quiet-list li {
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.72;
+      }
+
+      .signal-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .signal-item {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid var(--line);
+      }
+
+      .signal-item strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      .signal-item p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.68;
+        color: var(--text-secondary);
+      }
+
+      .archive-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .archive-entry {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.74);
+        border: 1px solid var(--line);
+      }
+
+      .archive-entry strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .archive-entry span {
+        display: block;
+        font-size: 12px;
+        color: var(--text-tertiary);
+        line-height: 1.6;
+      }
+
+      .summary-card {
+        min-height: 132px;
+        border-radius: 22px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .summary-card.accent {
+        background: linear-gradient(180deg, rgba(29, 78, 216, 0.12), rgba(29, 78, 216, 0.04));
+      }
+
+      .summary-card.amber {
+        background: linear-gradient(180deg, rgba(203, 126, 45, 0.14), rgba(203, 126, 45, 0.05));
+      }
+
+      .summary-card.green {
+        background: linear-gradient(180deg, rgba(31, 122, 85, 0.14), rgba(31, 122, 85, 0.05));
+      }
+
+      .summary-card.ink {
+        background: linear-gradient(180deg, rgba(28, 28, 28, 0.94), rgba(48, 48, 48, 0.94));
+        color: white;
+      }
+
+      .summary-card small {
+        font-size: 12px;
+        color: inherit;
+        opacity: 0.74;
+      }
+
+      .summary-card strong {
+        font-size: 30px;
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .summary-card p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .stage {
+        min-height: 0;
+      }
+
+      .workspace-panel {
+        display: none;
+        height: 100%;
+      }
+
+      .workspace-panel.active {
+        display: block;
+      }
+
+      .overview-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+        gap: 18px;
+        height: 100%;
+      }
+
+      .column-stack {
+        display: grid;
+        gap: 18px;
+        min-height: 0;
+      }
+
+      .panel {
+        padding: 28px;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .section-title {
+        margin: 0 0 6px;
+        font-size: 26px;
+        letter-spacing: -0.04em;
+      }
+
+      .panel-header p,
+      .muted {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .kpi-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .kpi-card {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid var(--line);
+      }
+
+      .metric-value {
+        margin: 8px 0 4px;
+        font-size: 34px;
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .kpi-meta {
+        font-size: 12px;
+        color: var(--text-tertiary);
+      }
+
+      .timeline {
+        display: grid;
+        gap: 12px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 14px;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(0, 0, 0, 0.08);
+      }
+
+      .timeline-item:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .time {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-tertiary);
+        letter-spacing: 0.04em;
+      }
+
+      .event-card strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .event-card p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+      }
+
+      .event-tags {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tag {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.05);
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .decision-stack,
+      .artifact-list,
+      .team-list,
+      .candidate-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .decision-card,
+      .artifact-item,
+      .team-item,
+      .candidate-item {
+        text-align: left;
+        width: 100%;
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.82);
+        transition: all var(--transition-fast);
+      }
+
+      .decision-card:hover,
+      .artifact-item:hover,
+      .team-item:hover,
+      .candidate-item:hover,
+      .decision-card.active,
+      .artifact-item.active,
+      .team-item.active,
+      .candidate-item.active {
+        border-color: rgba(29, 78, 216, 0.22);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      .decision-card small,
+      .artifact-item small,
+      .team-item small,
+      .candidate-item small {
+        display: block;
+        color: var(--text-tertiary);
+        margin-bottom: 8px;
+      }
+
+      .decision-card strong,
+      .artifact-item strong,
+      .team-item strong,
+      .candidate-item strong {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 6px;
+      }
+
+      .decision-card p,
+      .artifact-item p,
+      .team-item p,
+      .candidate-item p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+      }
+
+      .layout-split {
+        display: grid;
+        grid-template-columns: 360px minmax(0, 1fr);
+        gap: 18px;
+        height: 100%;
+      }
+
+      .list-panel,
+      .detail-panel {
+        min-height: 0;
+      }
+
+      .scroll-area {
+        max-height: calc(100vh - 280px);
+        overflow: auto;
+        padding-right: 4px;
+      }
+
+      .scroll-area::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .scroll-area::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.12);
+        border-radius: 999px;
+      }
+
+      .detail-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 16px;
+      }
+
+      .detail-hero h2 {
+        margin: 6px 0 10px;
+        font-size: 38px;
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--line);
+        color: var(--text-secondary);
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .detail-block {
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--line);
+      }
+
+      .detail-block h4 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .detail-block p,
+      .detail-block li {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.72;
+      }
+
+      .detail-block ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .option-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 16px;
+      }
+
+      .option-card {
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid var(--line);
+      }
+
+      .option-card.recommended {
+        background: linear-gradient(180deg, rgba(29, 78, 216, 0.09), rgba(29, 78, 216, 0.03));
+        border-color: rgba(29, 78, 216, 0.18);
+      }
+
+      .option-card h4 {
+        margin: 0 0 10px;
+        font-size: 17px;
+      }
+
+      .option-card p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+
+      .action-footer {
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .text-action {
+        border-radius: 14px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--line);
+        color: var(--text);
+        transition: all var(--transition-fast);
+      }
+
+      .text-action:hover {
+        border-color: var(--line-strong);
+        transform: translateY(-1px);
+      }
+
+      .artifact-preview {
+        padding: 22px;
+        border-radius: 24px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(252, 247, 240, 0.96));
+        border: 1px solid var(--line);
+      }
+
+      .document-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 14px 0 20px;
+      }
+
+      .document-body {
+        padding: 24px;
+        border-radius: 18px;
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        color: #33302b;
+        line-height: 1.8;
+      }
+
+      .document-body h3 {
+        margin: 0 0 12px;
+        font-size: 28px;
+        line-height: 1.15;
+        font-family:
+          "Iowan Old Style",
+          "Palatino Linotype",
+          "Songti SC",
+          serif;
+      }
+
+      .document-body p {
+        margin: 0 0 14px;
+        font-size: 15px;
+      }
+
+      .document-body ul {
+        margin: 0 0 16px;
+        padding-left: 20px;
+      }
+
+      .team-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        gap: 18px;
+        height: 100%;
+      }
+
+      .team-table {
+        display: grid;
+        gap: 12px;
+      }
+
+      .employee-card {
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      .employee-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 12px;
+      }
+
+      .employee-top strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      .employee-top span {
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .score-row {
+        display: grid;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .score-line {
+        display: grid;
+        grid-template-columns: 84px minmax(0, 1fr) 40px;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .score-line label {
+        font-size: 12px;
+        color: var(--text-tertiary);
+      }
+
+      .bar {
+        position: relative;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+      }
+
+      .bar > span {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #203fa8, #365fdd);
+      }
+
+      .aside-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .candidate-score {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .candidate-score span {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+
+      .footer-note {
+        margin-top: 16px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        color: var(--text-secondary);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 1380px) {
+        .shell {
+          grid-template-columns: 220px minmax(0, 1fr);
+        }
+
+        .topbar,
+        .overview-grid,
+        .team-grid,
+        .layout-split {
+          grid-template-columns: 1fr;
+        }
+
+        .mini-stats,
+        .summary-grid,
+        .detail-grid,
+        .option-grid,
+        .kpi-strip {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .scroll-area {
+          max-height: none;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          width: min(100vw - 20px, 1680px);
+          margin: 10px auto;
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar,
+        .workspace {
+          border-radius: 24px;
+        }
+
+        .mini-stats,
+        .summary-grid,
+        .detail-grid,
+        .option-grid,
+        .kpi-strip {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-badge">
+            <span class="status-dot" style="background: var(--green)"></span>
+            数字公司 · 持续运转中
+          </div>
+          <h1>Boss<br />Workbench</h1>
+          <p>
+            你不是在围观一群 Agent，也不是在玩一家公司模拟器，而是在经营一家具备持续记忆、稳定角色和真实交付能力的数字公司。
+          </p>
+        </div>
+
+        <nav class="nav-group">
+          <button class="nav-item active" data-panel="overview">
+            <strong>经营总览</strong>
+            <span>看今天公司在推进什么，以及老板下一步该做什么。</span>
+          </button>
+          <button class="nav-item" data-panel="briefing">
+            <strong>秘书简报</strong>
+            <span>看秘书长整理好的会后纪要、风险升级与老板简报。</span>
+          </button>
+          <button class="nav-item" data-panel="inbox">
+            <strong>管理者收件箱</strong>
+            <span>只处理关键决策：方向、审批、招聘、优先级冲突。</span>
+          </button>
+          <button class="nav-item" data-panel="artifacts">
+            <strong>交付物中心</strong>
+            <span>看真实资产，而不是过程日志。</span>
+          </button>
+          <button class="nav-item" data-panel="team">
+            <strong>团队与招聘</strong>
+            <span>看绩效差异、负载情况和人才补强。</span>
+          </button>
+        </nav>
+
+        <section class="sidebar-card">
+          <h3>公司脉搏</h3>
+          <div class="pulse-row"><span>本周目标完成</span><strong>67%</strong></div>
+          <div class="pulse-row"><span>秘书待汇报</span><strong>2 份</strong></div>
+          <div class="pulse-row"><span>待老板拍板</span><strong>3 项</strong></div>
+          <div class="pulse-row"><span>本周新增资产</span><strong>12 份</strong></div>
+          <div class="pulse-row"><span>编制状态</span><strong>10 / 11</strong></div>
+        </section>
+
+        <section class="sidebar-card">
+          <h3>创始团队</h3>
+          <div class="pulse-row"><span>秘书长</span><strong>1 名在岗</strong></div>
+          <div class="pulse-row"><span>作者岗</span><strong>2 名在岗</strong></div>
+          <div class="pulse-row"><span>编辑岗</span><strong>2 名在岗</strong></div>
+          <div class="pulse-row"><span>研究岗</span><strong>2 名在岗</strong></div>
+          <div class="pulse-row"><span>扩编建议</span><strong>作者 +1</strong></div>
+        </section>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <section class="topbar-card">
+            <div class="hero-top">
+              <div class="hero-copy">
+                <div class="capsule-row">
+                  <div class="capsule">Aurora Content Lab</div>
+                  <div class="capsule">第 8 周经营周期</div>
+                  <div class="capsule">内容增长公司</div>
+                </div>
+                <h2>老板不是来发 prompt，<br />而是来经营公司。</h2>
+                <p>
+                  这周公司的经营目标是「围绕 AI 销售自动化打出 1 个旗舰内容主题」。底层团队在持续协作，表层由秘书长把过程压缩成简报、决策包和资产更新，让你专注在真正高杠杆的判断上。
+                </p>
+              </div>
+              <div class="actions-row">
+                <button class="primary-action" data-quick-nav="briefing">先看秘书长今日简报</button>
+                <button class="secondary-action" data-quick-nav="inbox">再处理待决策事项</button>
+              </div>
+            </div>
+
+            <div class="mini-stats">
+              <div class="mini-stat">
+                <span>本周目标完成</span>
+                <strong>67%</strong>
+              </div>
+              <div class="mini-stat">
+                <span>待老板拍板</span>
+                <strong>3</strong>
+              </div>
+              <div class="mini-stat">
+                <span>今日新资产</span>
+                <strong>4</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="topbar-card hero-side">
+            <div class="brief-sheet">
+              <div class="capsule">秘书长筛选后的今日阅读顺序</div>
+              <h3>先读 1 份简报，<br />再做 2 个判断。</h3>
+              <p>你不需要先看满屏指标，也不需要翻会议记录。今天最重要的是按顺序处理，不要被同时出现的事情打断。</p>
+              <div class="brief-steps">
+                <div class="brief-step">
+                  <strong>01</strong>
+                  <p>先看老板晨间简报，2 分钟内知道今天哪些事情不用你管。</p>
+                </div>
+                <div class="brief-step">
+                  <strong>02</strong>
+                  <p>决定旗舰长文主线版本，这是今天影响最大的判断。</p>
+                </div>
+                <div class="brief-step">
+                  <strong>03</strong>
+                  <p>如果还有精力，再批准作者岗扩编，其他内容可以稍后处理。</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </header>
+
+        <main class="stage">
+          <section class="workspace-panel active" id="panel-overview">
+            <div class="overview-grid">
+              <div class="column-stack">
+                <section class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3 class="section-title">今天只看这三件事</h3>
+                      <p>首页不再展示所有过程，而是先给你一个清晰阅读顺序。</p>
+                    </div>
+                    <div class="capsule">更新时间 · 17:46</div>
+                  </div>
+                  <div class="focus-list">
+                    <article class="focus-item">
+                      <div class="focus-index">1</div>
+                      <div>
+                        <strong>先读秘书长的晨间简报</strong>
+                        <p>晨会、专题评审和风险升级都已被压缩，你不需要逐条看会议过程。</p>
+                      </div>
+                    </article>
+                    <article class="focus-item">
+                      <div class="focus-index">2</div>
+                      <div>
+                        <strong>决定旗舰长文采用哪条主线</strong>
+                        <p>这是今天最影响交付质量的一次判断，其他事项都可以围绕它延后排序。</p>
+                      </div>
+                    </article>
+                    <article class="focus-item">
+                      <div class="focus-index">3</div>
+                      <div>
+                        <strong>有余力时再批准作者岗扩编</strong>
+                        <p>这是中期吞吐问题，不需要比主稿判断更早处理。</p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3 class="section-title">今天会看到的新资产</h3>
+                      <p>只看已经成形的结果，过程细节移到秘书层和明细页。</p>
+                    </div>
+                    <button class="secondary-action" data-quick-nav="artifacts">打开交付物中心</button>
+                  </div>
+                  <div class="artifact-list">
+                    <button class="artifact-item" data-artifact-id="article-main">
+                      <small>旗舰长文 · 作者 A</small>
+                      <strong>《AI 销售自动化，不该从工具开始》</strong>
+                      <p>今天最值得你看的交付物，决定它就等于决定这一轮内容主线。</p>
+                    </button>
+                    <button class="artifact-item" data-artifact-id="research-brief">
+                      <small>研究摘要 · 研究员 A</small>
+                      <strong>竞品空缺地图与选题切口</strong>
+                      <p>如果你想理解为什么团队收敛到这个主题，这份摘要就是最短路径。</p>
+                    </button>
+                  </div>
+                  <div class="archive-list">
+                    <div class="archive-entry">
+                      <strong>资产库新增：《全网舆情监控日报》</strong>
+                      <span>由研究员与运营自动沉淀 · 今天 09:00 · 已归档，可复用为下周选题输入</span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <div class="column-stack">
+                <section class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3 class="section-title">待你拍板</h3>
+                      <p>先只放两件真正值得现在处理的事，低优先级项暂时不打扰你。</p>
+                    </div>
+                    <button class="secondary-action" data-quick-nav="inbox">去管理者收件箱</button>
+                  </div>
+                  <div class="decision-stack">
+                    <button class="decision-card" data-quick-nav="inbox">
+                      <small><span class="status-dot" style="background: var(--accent)"></span>第一优先</small>
+                      <strong>确定旗舰长文主线版本</strong>
+                      <p>作者 A 更锋利，作者 B 更稳健。今天先做这个判断，其他事情都能跟着落位。</p>
+                    </button>
+                    <button class="decision-card" data-quick-nav="inbox">
+                      <small><span class="status-dot" style="background: var(--amber)"></span>第二优先</small>
+                      <strong>批准作者岗扩编 +1</strong>
+                      <p>这是吞吐问题，不像主稿选择那么急，但今天定掉会让下周更轻松。</p>
+                    </button>
+                  </div>
+                  <div class="footer-note">
+                    分发拆条已经被秘书长降级为“稍后处理”：只有当主稿定版后，你才需要顺手放行。老板界面只保留当前最值得消耗注意力的两件事。
+                  </div>
+                </section>
+
+                <section class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3 class="section-title">公司正在活着，但不需要你现在介入</h3>
+                      <p>保留一点组织活性信号，让你感到公司在演化；但这些信号不会抢走首页主叙事。</p>
+                    </div>
+                  </div>
+                  <div class="signal-list">
+                    <div class="signal-item">
+                      <strong>组织信号：作者 A 与编辑 A 的磨合正在改善</strong>
+                      <p>过去两轮里他们的返工摩擦下降了 18%，说明团队在形成更稳定的协作默契。</p>
+                    </div>
+                    <div class="signal-item">
+                      <strong>市场信号：运营拆条测试帖收到超预期点击</strong>
+                      <p>有一条老板视角的短观点 CTR 提升明显，说明这条主题很可能值得做成系列资产。</p>
+                    </div>
+                    <div class="signal-item">
+                      <strong>制度信号：秘书长开始把评审分歧沉淀成固定模板</strong>
+                      <p>这会把今天的经验转成以后可复用的流程资产，而不是一次性的临场协调。</p>
+                    </div>
+                  </div>
+                  <div class="footer-note">
+                    这些信号证明公司不只是执行任务，还会积累关系、经验和制度；但它们默认留在背景层，不强迫你现在展开处理。
+                  </div>
+                </section>
+              </div>
+            </div>
+          </section>
+
+          <section class="workspace-panel" id="panel-briefing">
+            <div class="layout-split">
+              <section class="panel list-panel">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="section-title">秘书简报</h3>
+                    <p>把会议、冲突和变化压缩成老板能快速吸收的决策材料。</p>
+                  </div>
+                  <div class="capsule">2 份待阅读</div>
+                </div>
+                <div class="scroll-area decision-stack" id="briefing-list"></div>
+              </section>
+
+              <section class="panel detail-panel" id="briefing-detail"></section>
+            </div>
+          </section>
+
+          <section class="workspace-panel" id="panel-inbox">
+            <div class="layout-split">
+              <section class="panel list-panel">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="section-title">管理者收件箱</h3>
+                    <p>只保留真正需要老板拍板的事情。</p>
+                  </div>
+                  <div class="capsule">3 项待决策</div>
+                </div>
+                <div class="scroll-area decision-stack" id="inbox-list"></div>
+              </section>
+
+              <section class="panel detail-panel" id="inbox-detail"></section>
+            </div>
+          </section>
+
+          <section class="workspace-panel" id="panel-artifacts">
+            <div class="layout-split">
+              <section class="panel list-panel">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="section-title">交付物中心</h3>
+                    <p>以真实资产为中心，而不是以 agent 消息为中心。</p>
+                  </div>
+                  <div class="capsule">本周已产出 12 份</div>
+                </div>
+                <div class="scroll-area artifact-list" id="artifact-list"></div>
+              </section>
+
+              <section class="panel detail-panel" id="artifact-detail"></section>
+            </div>
+          </section>
+
+          <section class="workspace-panel" id="panel-team">
+            <div class="team-grid">
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3 class="section-title">团队编制与绩效差异</h3>
+                    <p>同岗多人之后，真正重要的是差异、负载和协作张力。</p>
+                  </div>
+                  <div class="capsule">当前编制 10 / 11</div>
+                </div>
+                <div class="team-table" id="team-list"></div>
+              </section>
+
+              <div class="aside-stack">
+                <section class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3 class="section-title">扩编申请</h3>
+                      <p>COO 已提交作者岗补强需求。</p>
+                    </div>
+                  </div>
+                  <div class="detail-block">
+                    <h4>职位申请单</h4>
+                    <p>
+                      岗位：作者 · 目标：补强案例深度稿与旗舰长文并行能力 · 预算等级：中高 · 汇报对象：内容策略师。
+                    </p>
+                  </div>
+                  <div class="footer-note">
+                    推荐动作：批准 shortlist 浏览，然后用 1 个轻量试稿筛掉不适合品牌语气的候选人。
+                  </div>
+                </section>
+
+                <section class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3 class="section-title">候选人 shortlist</h3>
+                      <p>不是无限列表，而是能做出决策的 3 位候选人。</p>
+                    </div>
+                  </div>
+                  <div class="candidate-list" id="candidate-list"></div>
+                </section>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      const inboxItems = [
+        {
+          id: "hire-writer",
+          priority: "高优先级",
+          title: "是否批准作者岗扩编 +1",
+          subtitle: "COO 发起 · 负载过高导致高价值内容交付风险上升",
+          summary:
+            "过去两个周期，作者岗平均负载持续超过 84，旗舰长文和案例稿挤占同一生产带宽。如果本周不扩编，下周需要压掉至少一个高质量内容项目。",
+          background: [
+            "作者 A 的速度快，但返工率偏高；作者 B 的质量稳定，但吞吐上限有限。",
+            "编辑侧已有足够带宽承接第三位作者，不会形成新的审核瓶颈。",
+            "预算上还能承受 1 个中高档位作者，但会压缩本周额外实验内容空间。"
+          ],
+          impact: "批准扩编预计提升高价值稿件并行能力 22%，但会吃掉本周剩余预算的一档空间。",
+          options: [
+            {
+              label: "批准扩编",
+              recommended: true,
+              description: "立即进入 shortlist 评估与试稿，让新作者在下个周期开始承接案例稿和深度稿。"
+            },
+            {
+              label: "暂缓扩编",
+              recommended: false,
+              description: "本周先压缩低优先级短内容，把作者资源全部集中到旗舰长文，但下周风险会继续累积。"
+            }
+          ]
+        },
+        {
+          id: "choose-draft",
+          priority: "推荐尽快决策",
+          title: "在两份旗舰长文初稿之间确定主线版本",
+          subtitle: "编辑发起 · 双作者竞稿已经完成第一轮评审",
+          summary:
+            "作者 A 提供了观点更强、传播性更高的版本；作者 B 的结构与证据链更完整。编辑建议采取 A 为主稿、B 的结构模块补入终稿。",
+          background: [
+            "作者 A 的标题与开篇更有抓手，适合社媒传播和品牌风格。",
+            "作者 B 的结构更接近 evergreen 内容模板，可长期复用。",
+            "如果继续并行打磨两稿，会额外消耗 1.2 天作者与编辑产能。"
+          ],
+          impact: "今天定主线可以把编辑资源集中到一个版本，确保明天下午前产出可发布终稿。",
+          options: [
+            {
+              label: "A 为主稿，吸收 B 结构",
+              recommended: true,
+              description: "保持传播力，同时用 B 的结构与证据链提升完成度。"
+            },
+            {
+              label: "继续双轨打磨",
+              recommended: false,
+              description: "可能得到更强终稿，但会拉长交付时间并占用编辑带宽。"
+            }
+          ]
+        },
+        {
+          id: "approve-social",
+          priority: "可快速处理",
+          title: "批准 5 条分发短内容进入发布队列",
+          subtitle: "运营发起 · 已通过编辑初审",
+          summary:
+            "围绕旗舰长文拆出的 5 条短内容已经过运营重写和编辑校对，可直接进入平台排程。如果你认可主线表达，可以今天一起放行。",
+          background: [
+            "内容覆盖 LinkedIn、公众号摘要、邮件开头和短观点卡片。",
+            "其中 1 条观点卡片较为强势，建议你亲自确认是否符合品牌边界。"
+          ],
+          impact: "放行后，运营将按平台节奏排程，最早今晚即可进入预发布队列。",
+          options: [
+            {
+              label: "全部通过",
+              recommended: true,
+              description: "进入发布队列，仅保留 1 条强观点内容做最后人工复核。"
+            },
+            {
+              label: "只通过 4 条",
+              recommended: false,
+              description: "先移除最强观点的卡片，降低争议风险，但损失传播性。"
+            }
+          ]
+        }
+      ];
+
+      const artifacts = [
+        {
+          id: "article-main",
+          type: "长文初稿",
+          author: "作者 A",
+          title: "《AI 销售自动化，不该从工具开始》",
+          meta: ["旗舰内容", "版本 v3", "待老板确定主线"],
+          summary: "这是本周的旗舰长文候选主稿，核心观点是：老板想要的不是更多工具，而是一套能真正经营业务的系统。",
+          excerptTitle: "文章预览",
+          paragraphs: [
+            "如果你问多数团队为什么推不动 AI 销售自动化，答案往往不是工具不够，而是没人真正定义谁在什么时候、基于什么信息做什么决策。",
+            "真正的问题从来不是自动化本身，而是公司内部没有一个稳定的经营界面：谁看目标，谁看风险，谁看交付，谁来拍板。于是工具越多，管理成本越高。",
+            "所以，与其继续追求更多自动化动作，不如先构建一个清晰的 Boss Workbench——让老板只在关键节点介入，让团队和系统承接其余工作。"
+          ],
+          bullets: [
+            "开篇 punch 足够强，适合做旗舰内容",
+            "品牌语气整体匹配，但部分句子过于绝对",
+            "建议吸收作者 B 的证据结构与案例段落"
+          ],
+          footerNote: "编辑意见：推荐作为主稿继续推进。"
+        },
+        {
+          id: "social-pack",
+          type: "社媒拆条",
+          author: "分发运营",
+          title: "旗舰内容拆条包 · 5 条渠道化短内容",
+          meta: ["LinkedIn", "邮件", "短观点卡片"],
+          summary: "围绕旗舰长文拆成 5 个不同渠道版本，兼顾品牌语气和平台节奏。",
+          excerptTitle: "拆条示例",
+          paragraphs: [
+            "1. 真正拖慢 AI 落地的，不是工具，而是老板没有一个经营界面。",
+            "2. 当所有人都在加工具时，真正有效的团队在减决策摩擦。",
+            "3. 你要的不是自动化链路，而是一家会自己推进的数字公司。"
+          ],
+          bullets: [
+            "1 条 LinkedIn 长帖开场",
+            "2 条短观点卡片",
+            "1 条邮件引言",
+            "1 条公众号摘要导语"
+          ],
+          footerNote: "运营意见：可以随主稿一起放行。"
+        },
+        {
+          id: "research-brief",
+          type: "研究摘要",
+          author: "研究员 A",
+          title: "竞品空缺地图与主题切口",
+          meta: ["竞品扫描", "用户语言", "选题依据"],
+          summary: "总结销售自动化赛道内容中的典型空缺，以及可形成差异化的老板视角话题。",
+          excerptTitle: "重点发现",
+          paragraphs: [
+            "多数竞品内容围绕功能和工作流展开，几乎没有人把“老板如何经营 AI 系统”说清楚。",
+            "用户在讨论中更常提到的是：看不到结果、管不动团队、不知道何时介入，而不是单个工具缺什么功能。"
+          ],
+          bullets: [
+            "差异化切口：老板视角经营系统",
+            "可延展子主题：招聘、绩效、决策与资产积累",
+            "推荐下一篇：如何给数字员工设置组织边界"
+          ],
+          footerNote: "研究建议：这套主题可做连续系列内容。"
+        }
+      ];
+
+      const briefings = [
+        {
+          id: "daily-brief",
+          type: "老板晨间简报",
+          owner: "秘书长 / Chief of Staff",
+          title: "今天你只需要看 3 件事",
+          subtitle: "秘书长已压缩晨会、专题评审和负载预警信息。",
+          summary:
+            "今天公司没有需要你参与的会议。最值得你关注的是：旗舰长文主线、作者扩编申请，以及一条可能越过品牌边界的强观点拆条。",
+          sections: [
+            {
+              title: "你今天不需要参与的事",
+              body: "晨会已经完成，COO 与策略师已锁定今日优先级；专题评审会已经把双稿竞争收敛到 2 个清晰版本。"
+            },
+            {
+              title: "你今天需要拍板的事",
+              body: "1）决定旗舰长文采用作者 A 主稿还是继续双轨；2）批准作者岗扩编；3）确认是否允许一条强观点社媒卡片进入预发布队列。"
+            },
+            {
+              title: "秘书建议",
+              body: "优先批准“作者 A 为主稿、吸收作者 B 结构”的方案，并立刻打开 shortlist 看作者岗候选人。"
+            }
+          ]
+        },
+        {
+          id: "review-minutes",
+          type: "专题评审会纪要",
+          owner: "秘书长 / Chief of Staff",
+          title: "旗舰长文评审会：保留锋利观点，但补强结构证据",
+          subtitle: "参与者：策略师、作者 A、作者 B、编辑 A、编辑 B",
+          summary:
+            "会议没有要求老板参加，因为分歧已经被压缩成一个清晰选择：保留作者 A 的开篇力度，同时吸收作者 B 的结构稳定性。",
+          sections: [
+            {
+              title: "会议结论",
+              body: "作者 A 的版本更适合作为旗舰内容主稿，作者 B 的版本拆解出 2 个结构模块并入终稿。"
+            },
+            {
+              title: "分歧点",
+              body: "编辑 A 担心 A 稿部分表达过于绝对；编辑 B 认为传播势能值得保留。最终形成“保留主张，微调语气”的折中方案。"
+            },
+            {
+              title: "会后行动项",
+              body: "作者 A 今晚前完成语气修订；编辑 A 明早进行终审；运营同步准备 5 条平台拆条。"
+            }
+          ]
+        }
+      ];
+
+      const teamMembers = [
+        {
+          name: "秘书长",
+          role: "Chief of Staff",
+          note: "负责老板简报、会议纪要、风险升级与决策包整理",
+          metrics: [
+            ["清晰度", 91],
+            ["响应", 88],
+            ["协作", 93],
+            ["稳定性", 95]
+          ]
+        },
+        {
+          name: "作者 A",
+          role: "主笔作者",
+          note: "快、敢写、标题强，但返工率偏高",
+          metrics: [
+            ["产出", 92],
+            ["通过率", 63],
+            ["协作", 74],
+            ["稳定性", 68]
+          ]
+        },
+        {
+          name: "作者 B",
+          role: "主笔作者",
+          note: "结构稳、品牌一致性高，但爆点弱一些",
+          metrics: [
+            ["产出", 71],
+            ["通过率", 86],
+            ["协作", 78],
+            ["稳定性", 91]
+          ]
+        },
+        {
+          name: "编辑 A",
+          role: "编辑 / 质检",
+          note: "标准严格，能显著降低发布风险，但节奏慢",
+          metrics: [
+            ["产出", 66],
+            ["通过率", 89],
+            ["协作", 72],
+            ["稳定性", 88]
+          ]
+        },
+        {
+          name: "编辑 B",
+          role: "编辑 / 质检",
+          note: "处理速度快，适合初审与节奏推进",
+          metrics: [
+            ["产出", 84],
+            ["通过率", 75],
+            ["协作", 81],
+            ["稳定性", 79]
+          ]
+        },
+        {
+          name: "研究员 A",
+          role: "研究员",
+          note: "擅长竞品扫描与切口收敛，速度快",
+          metrics: [
+            ["产出", 88],
+            ["通过率", 82],
+            ["协作", 80],
+            ["稳定性", 83]
+          ]
+        }
+      ];
+
+      const candidates = [
+        {
+          name: "候选人 C",
+          role: "作者岗",
+          note: "擅长深度长文和案例化写作，适合作为作者 B 的补位型人才。",
+          tags: ["速度 6", "质量 9", "协作 8", "风险：偏保守"]
+        },
+        {
+          name: "候选人 D",
+          role: "作者岗",
+          note: "传播感强，标题与开场能力出色，但品牌一致性需要更多编辑介入。",
+          tags: ["速度 9", "质量 6", "协作 7", "风险：返工偏高"]
+        },
+        {
+          name: "候选人 E",
+          role: "作者岗",
+          note: "擅长把研究材料整合成结构稳定的 evergreen 内容，适合知识库型内容积累。",
+          tags: ["速度 7", "质量 8", "协作 9", "风险：观点偏弱"]
+        }
+      ];
+
+      const navItems = document.querySelectorAll(".nav-item");
+      const panels = document.querySelectorAll(".workspace-panel");
+
+      function activatePanel(panelName) {
+        navItems.forEach((item) => {
+          item.classList.toggle("active", item.dataset.panel === panelName);
+        });
+        panels.forEach((panel) => {
+          panel.classList.toggle("active", panel.id === `panel-${panelName}`);
+        });
+      }
+
+      navItems.forEach((item) => {
+        item.addEventListener("click", () => activatePanel(item.dataset.panel));
+      });
+
+      document.querySelectorAll("[data-quick-nav]").forEach((button) => {
+        button.addEventListener("click", () => activatePanel(button.dataset.quickNav));
+      });
+
+      function renderInbox() {
+        const listNode = document.getElementById("inbox-list");
+        const detailNode = document.getElementById("inbox-detail");
+        let activeId = inboxItems[0].id;
+
+        function updateDetail() {
+          const activeItem = inboxItems.find((item) => item.id === activeId);
+
+          detailNode.innerHTML = `
+            <div class="detail-hero">
+              <div>
+                <div class="pill">${activeItem.priority}</div>
+                <h2>${activeItem.title}</h2>
+                <p class="muted">${activeItem.subtitle}</p>
+              </div>
+              <div class="capsule">建议今天内处理</div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-block">
+                <h4>摘要</h4>
+                <p>${activeItem.summary}</p>
+              </div>
+              <div class="detail-block">
+                <h4>影响</h4>
+                <p>${activeItem.impact}</p>
+              </div>
+              <div class="detail-block" style="grid-column: 1 / -1;">
+                <h4>背景信息</h4>
+                <ul>${activeItem.background.map((item) => `<li>${item}</li>`).join("")}</ul>
+              </div>
+            </div>
+
+            <div class="option-grid">
+              ${activeItem.options
+                .map(
+                  (option) => `
+                    <article class="option-card ${option.recommended ? "recommended" : ""}">
+                      <h4>${option.label}${option.recommended ? " · 推荐" : ""}</h4>
+                      <p>${option.description}</p>
+                    </article>
+                  `
+                )
+                .join("")}
+            </div>
+
+            <div class="action-footer">
+              <button class="primary-action">批准推荐方案</button>
+              <button class="secondary-action">改选备选方案</button>
+              <button class="text-action">写批注后交回 COO</button>
+            </div>
+          `;
+
+          listNode.querySelectorAll(".decision-card").forEach((button) => {
+            button.classList.toggle("active", button.dataset.id === activeId);
+          });
+        }
+
+        listNode.innerHTML = inboxItems
+          .map(
+            (item) => `
+              <button class="decision-card ${item.id === activeId ? "active" : ""}" data-id="${item.id}">
+                <small>${item.priority}</small>
+                <strong>${item.title}</strong>
+                <p>${item.subtitle}</p>
+              </button>
+            `
+          )
+          .join("");
+
+        listNode.querySelectorAll(".decision-card").forEach((button) => {
+          button.addEventListener("click", () => {
+            activeId = button.dataset.id;
+            updateDetail();
+          });
+        });
+
+        updateDetail();
+      }
+
+      function renderBriefings() {
+        const listNode = document.getElementById("briefing-list");
+        const detailNode = document.getElementById("briefing-detail");
+        let activeId = briefings[0].id;
+
+        function updateDetail() {
+          const briefing = briefings.find((item) => item.id === activeId);
+
+          detailNode.innerHTML = `
+            <div class="detail-hero">
+              <div>
+                <div class="pill">${briefing.type} · ${briefing.owner}</div>
+                <h2>${briefing.title}</h2>
+                <p class="muted">${briefing.subtitle}</p>
+              </div>
+              <div class="actions-row">
+                <button class="primary-action">标记已阅读</button>
+                <button class="secondary-action">转为待决策</button>
+              </div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-block" style="grid-column: 1 / -1;">
+                <h4>老板摘要</h4>
+                <p>${briefing.summary}</p>
+              </div>
+              ${briefing.sections
+                .map(
+                  (section) => `
+                    <div class="detail-block">
+                      <h4>${section.title}</h4>
+                      <p>${section.body}</p>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+
+            <div class="footer-note">
+              这是秘书长层的价值：老板不看原始会议过程，也能拿到结构化简报、分歧摘要和建议动作。
+            </div>
+          `;
+
+          listNode.querySelectorAll(".decision-card").forEach((button) => {
+            button.classList.toggle("active", button.dataset.id === activeId);
+          });
+        }
+
+        listNode.innerHTML = briefings
+          .map(
+            (item) => `
+              <button class="decision-card ${item.id === activeId ? "active" : ""}" data-id="${item.id}">
+                <small>${item.type}</small>
+                <strong>${item.title}</strong>
+                <p>${item.subtitle}</p>
+              </button>
+            `
+          )
+          .join("");
+
+        listNode.querySelectorAll(".decision-card").forEach((button) => {
+          button.addEventListener("click", () => {
+            activeId = button.dataset.id;
+            updateDetail();
+          });
+        });
+
+        updateDetail();
+      }
+
+      function renderArtifacts() {
+        const listNode = document.getElementById("artifact-list");
+        const detailNode = document.getElementById("artifact-detail");
+        let activeId = artifacts[0].id;
+
+        function updateDetail() {
+          const artifact = artifacts.find((item) => item.id === activeId);
+          detailNode.innerHTML = `
+            <div class="detail-hero">
+              <div>
+                <div class="pill">${artifact.type} · ${artifact.author}</div>
+                <h2>${artifact.title}</h2>
+                <p class="muted">${artifact.summary}</p>
+              </div>
+              <div class="actions-row">
+                <button class="primary-action">通过</button>
+                <button class="secondary-action">打回修改</button>
+              </div>
+            </div>
+
+            <div class="artifact-preview">
+              <div class="document-meta">
+                ${artifact.meta.map((tag) => `<span class="pill">${tag}</span>`).join("")}
+              </div>
+              <div class="document-body">
+                <h3>${artifact.excerptTitle}</h3>
+                ${artifact.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+                <ul>${artifact.bullets.map((bullet) => `<li>${bullet}</li>`).join("")}</ul>
+                <p><strong>${artifact.footerNote}</strong></p>
+              </div>
+            </div>
+
+            <div class="action-footer">
+              <button class="text-action">写批注</button>
+              <button class="text-action">设为模板</button>
+              <button class="text-action">查看关联项目</button>
+            </div>
+          `;
+
+          listNode.querySelectorAll(".artifact-item").forEach((button) => {
+            button.classList.toggle("active", button.dataset.id === activeId);
+          });
+        }
+
+        listNode.innerHTML = artifacts
+          .map(
+            (artifact) => `
+              <button class="artifact-item ${artifact.id === activeId ? "active" : ""}" data-id="${artifact.id}">
+                <small>${artifact.type} · ${artifact.author}</small>
+                <strong>${artifact.title}</strong>
+                <p>${artifact.summary}</p>
+              </button>
+            `
+          )
+          .join("");
+
+        listNode.querySelectorAll(".artifact-item").forEach((button) => {
+          button.addEventListener("click", () => {
+            activeId = button.dataset.id;
+            updateDetail();
+          });
+        });
+
+        updateDetail();
+      }
+
+      function renderTeam() {
+        const teamListNode = document.getElementById("team-list");
+        const candidateListNode = document.getElementById("candidate-list");
+
+        teamListNode.innerHTML = teamMembers
+          .map(
+            (member) => `
+              <article class="employee-card">
+                <div class="employee-top">
+                  <div>
+                    <strong>${member.name}</strong>
+                    <span>${member.role}</span>
+                  </div>
+                  <div class="capsule">${member.note}</div>
+                </div>
+                <div class="score-row">
+                  ${member.metrics
+                    .map(
+                      ([label, value]) => `
+                        <div class="score-line">
+                          <label>${label}</label>
+                          <div class="bar"><span style="width: ${value}%"></span></div>
+                          <strong>${value}</strong>
+                        </div>
+                      `
+                    )
+                    .join("")}
+                </div>
+              </article>
+            `
+          )
+          .join("");
+
+        candidateListNode.innerHTML = candidates
+          .map(
+            (candidate, index) => `
+              <button class="candidate-item ${index === 0 ? "active" : ""}">
+                <small>${candidate.role}</small>
+                <strong>${candidate.name}</strong>
+                <p>${candidate.note}</p>
+                <div class="candidate-score">
+                  ${candidate.tags.map((tag) => `<span>${tag}</span>`).join("")}
+                </div>
+              </button>
+            `
+          )
+          .join("");
+      }
+
+      renderBriefings();
+      renderInbox();
+      renderArtifacts();
+      renderTeam();
+    </script>
+  </body>
+</html>
