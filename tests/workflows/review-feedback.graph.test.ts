@@ -1,10 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
-import { Command, MemorySaver } from "@langchain/langgraph";
+import { Command } from "@langchain/langgraph";
 
 import { interruptForOwner } from "../../lib/workflows/review-feedback/nodes/interrupt-for-owner";
 import { createSyncStateNode } from "../../lib/workflows/review-feedback/nodes/sync-state";
 import { ReviewFeedbackStateAnnotation } from "../../lib/workflows/review-feedback/state";
 import { StateGraph, START, END } from "@langchain/langgraph";
+import {
+  DurableWorkflowCheckpointSaver,
+  InMemoryWorkflowCheckpointPersistence
+} from "../../lib/workflows/runtime/checkpoint-saver";
 
 describe("review feedback graph", () => {
   it("interrupts for owner input and resumes without replaying completed nodes", async () => {
@@ -60,7 +64,10 @@ describe("review feedback graph", () => {
       .addEdge("syncStateAfterResume", "finalize")
       .addEdge("finalize", END)
       .compile({
-        checkpointer: new MemorySaver()
+        checkpointer: new DurableWorkflowCheckpointSaver(
+          "review-feedback-test",
+          new InMemoryWorkflowCheckpointPersistence()
+        )
       });
 
     const config = {

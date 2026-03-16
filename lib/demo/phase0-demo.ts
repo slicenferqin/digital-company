@@ -25,6 +25,10 @@ import {
   startReviewFeedbackGraph
 } from "@/lib/workflows/review-feedback/graph";
 import { bootstrapTeam } from "@/lib/services/team-bootstrap";
+import {
+  DurableWorkflowCheckpointSaver,
+  InMemoryWorkflowCheckpointPersistence
+} from "@/lib/workflows/runtime/checkpoint-saver";
 
 type DemoSession = {
   sessionId: string;
@@ -48,6 +52,7 @@ type DemoSession = {
     title: string;
     summary: string | null;
   }>;
+  reviewCheckpointSaver: DurableWorkflowCheckpointSaver;
   status: "pending_owner" | "approved";
 };
 
@@ -98,6 +103,10 @@ async function runDemoBootstrap(sessionId: string, threadId: string): Promise<De
   const decisions: Decision[] = [];
   const preferenceProfiles: PreferenceProfile[] = [];
   const memoryEntries: DemoSession["memoryEntries"] = [];
+  const reviewCheckpointSaver = new DurableWorkflowCheckpointSaver(
+    `review-feedback-demo-${sessionId}`,
+    new InMemoryWorkflowCheckpointPersistence()
+  );
 
   const bootstrapResult = await bootstrapTeam(
     {
@@ -474,6 +483,9 @@ async function runDemoBootstrap(sessionId: string, threadId: string): Promise<De
         {
           getDecisionById: async (currentDecisionId) =>
             decisions.find((item) => item.id === currentDecisionId) ?? null
+        },
+        {
+          checkpointer: reviewCheckpointSaver
         }
       );
 
@@ -532,6 +544,7 @@ async function runDemoBootstrap(sessionId: string, threadId: string): Promise<De
     decisions,
     preferenceProfiles,
     memoryEntries,
+    reviewCheckpointSaver,
     status: "pending_owner"
   };
 }
@@ -613,6 +626,8 @@ export async function approvePhase0DemoDecision(sessionId: string) {
       resumeReviewFeedbackGraph(threadId, ownerChoice, {
         getDecisionById: async (decisionId: string) =>
           session.decisions.find((item) => item.id === decisionId) ?? null
+      }, {
+        checkpointer: session.reviewCheckpointSaver
       })
   });
 

@@ -1,6 +1,8 @@
 import { Command, END, MemorySaver, START, StateGraph } from "@langchain/langgraph";
+import type { BaseCheckpointSaver } from "@langchain/langgraph";
 
 import { getDecisionById } from "@/lib/domain/decision/repository";
+import { getDurableWorkflowCheckpointSaver } from "@/lib/workflows/runtime/checkpoint-saver";
 
 import { interruptForOwner } from "./nodes/interrupt-for-owner";
 import { createSyncStateNode } from "./nodes/sync-state";
@@ -15,10 +17,13 @@ const defaultDependencies: ReviewFeedbackDependencies = {
   getDecisionById
 };
 
-const sharedCheckpointer = new MemorySaver();
+const durableCheckpointer = getDurableWorkflowCheckpointSaver("review-feedback");
 
 export function buildReviewFeedbackGraph(
-  dependencies: ReviewFeedbackDependencies = defaultDependencies
+  dependencies: ReviewFeedbackDependencies = defaultDependencies,
+  options?: {
+    checkpointer?: BaseCheckpointSaver | MemorySaver;
+  }
 ) {
   return new StateGraph(ReviewFeedbackStateAnnotation)
     .addNode("syncStateBeforeInterrupt", createSyncStateNode(dependencies))
@@ -33,16 +38,19 @@ export function buildReviewFeedbackGraph(
     .addEdge("syncStateAfterResume", "finalize")
     .addEdge("finalize", END)
     .compile({
-      checkpointer: sharedCheckpointer
+      checkpointer: options?.checkpointer ?? durableCheckpointer
     });
 }
 
 export async function startReviewFeedbackGraph(
   input: ReviewFeedbackInput,
   threadId: string,
-  dependencies: ReviewFeedbackDependencies = defaultDependencies
+  dependencies: ReviewFeedbackDependencies = defaultDependencies,
+  options?: {
+    checkpointer?: BaseCheckpointSaver | MemorySaver;
+  }
 ) {
-  const graph = buildReviewFeedbackGraph(dependencies);
+  const graph = buildReviewFeedbackGraph(dependencies, options);
   const chunks: unknown[] = [];
 
   for await (const chunk of await graph.stream(
@@ -72,9 +80,12 @@ export async function startReviewFeedbackGraph(
 export async function resumeReviewFeedbackGraph(
   threadId: string,
   ownerChoice: OwnerChoice,
-  dependencies: ReviewFeedbackDependencies = defaultDependencies
+  dependencies: ReviewFeedbackDependencies = defaultDependencies,
+  options?: {
+    checkpointer?: BaseCheckpointSaver | MemorySaver;
+  }
 ) {
-  const graph = buildReviewFeedbackGraph(dependencies);
+  const graph = buildReviewFeedbackGraph(dependencies, options);
   const chunks: unknown[] = [];
 
   for await (const chunk of await graph.stream(new Command({ resume: ownerChoice }), {

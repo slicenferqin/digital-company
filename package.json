@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@langchain/core": "^0.3.40",
+    "@langchain/langgraph-checkpoint": "^0.0.18",
     "@langchain/langgraph": "^0.2.0",
     "drizzle-orm": "^0.36.0",
     "inngest": "^3.31.0",

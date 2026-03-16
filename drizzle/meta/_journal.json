@@ -15,6 +15,13 @@
       "when": 1773566296527,
       "tag": "0001_decision-workflow-link",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773641633294,
+      "tag": "0002_workflow-checkpoints",
+      "breakpoints": true
     }
   ]
 }
