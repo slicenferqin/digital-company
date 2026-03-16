@@ -48,7 +48,7 @@ export interface UpdateDecisionInput {
   workflowThreadId?: string | null;
   workflowName?: string | null;
   workflowStatus?: DecisionWorkflowStatus;
-  resolution?: string;
+  resolution?: string | null;
   resolutionPayload?: Record<string, unknown>;
-  decidedAt?: Date;
+  decidedAt?: Date | null;
 }

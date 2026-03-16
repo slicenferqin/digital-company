@@ -9,7 +9,9 @@ export function createReviewDraftNode(dependencies: ProductionGraphDependencies)
     const reviewResult = await dependencies.reviewer.reviewDraft({
       artifact: state.draftArtifact,
       bodyMarkdown: state.draftArtifact.bodyMarkdown ?? state.bodyMarkdown,
-      summary: state.draftArtifact.summary
+      summary: state.draftArtifact.summary,
+      writingGuidelines: state.writingGuidelines,
+      reviewGuidelines: state.reviewGuidelines
     });
 
     return {

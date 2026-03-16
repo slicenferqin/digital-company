@@ -12,9 +12,7 @@ export const schedulingEventNames = {
 
 export const workflowEntrypointNames = {
   cyclePlanning: "cycle-planning",
-  research: "research",
-  production: "production",
-  briefing: "briefing",
+  cycleExecution: "cycle-execution",
   reviewFeedback: "review-feedback"
 } as const;
 

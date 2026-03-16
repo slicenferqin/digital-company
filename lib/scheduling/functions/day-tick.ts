@@ -16,28 +16,12 @@ export interface DayTickPayload {
 export function buildDayTickEntrypoints(payload: DayTickPayload): WorkflowEntrypointRequest[] {
   return [
     {
-      workflow: workflowEntrypointNames.research,
+      workflow: workflowEntrypointNames.cycleExecution,
       input: {
         teamId: payload.teamId,
         cycleId: payload.cycleId,
-        query: payload.focusQuery ?? "本周期高优先级主题研究",
-        providerKey: "stub"
-      }
-    },
-    {
-      workflow: workflowEntrypointNames.production,
-      input: {
-        teamId: payload.teamId,
-        cycleId: payload.cycleId
-      }
-    },
-    {
-      workflow: workflowEntrypointNames.briefing,
-      input: {
-        teamId: payload.teamId,
-        cycleId: payload.cycleId,
-        type: "daily",
-        occurredAt: payload.occurredAt
+        occurredAt: payload.occurredAt,
+        focusQuery: payload.focusQuery ?? null
       }
     }
   ];

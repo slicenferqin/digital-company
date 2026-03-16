@@ -14,26 +14,12 @@ describe("day tick scheduling", () => {
 
     expect(entrypoints).toEqual([
       expect.objectContaining({
-        workflow: "research",
+        workflow: "cycle-execution",
         input: expect.objectContaining({
           teamId: "team_1",
           cycleId: "cycle_1",
-          query: "Founder-led B2B content ops"
-        })
-      }),
-      expect.objectContaining({
-        workflow: "production",
-        input: expect.objectContaining({
-          teamId: "team_1",
-          cycleId: "cycle_1"
-        })
-      }),
-      expect.objectContaining({
-        workflow: "briefing",
-        input: expect.objectContaining({
-          teamId: "team_1",
-          cycleId: "cycle_1",
-          type: "daily"
+          occurredAt: "2026-03-16T09:00:00.000Z",
+          focusQuery: "Founder-led B2B content ops"
         })
       })
     ]);

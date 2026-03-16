@@ -34,6 +34,8 @@ export async function runProductionGraph(
     title: input.title,
     bodyMarkdown: input.bodyMarkdown,
     summary: input.summary ?? null,
+    writingGuidelines: input.writingGuidelines ?? [],
+    reviewGuidelines: input.reviewGuidelines ?? input.writingGuidelines ?? [],
     projectId: input.projectId ?? null,
     taskId: input.taskId ?? null,
     authorMemberId: input.authorMemberId ?? null,

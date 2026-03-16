@@ -1,10 +1,12 @@
 import { z } from "zod";
 
+const defaultDatabaseUrl = "postgres://slicenfer@localhost:5432/postgres";
+
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
-  INNGEST_EVENT_KEY: z.string().min(1),
-  INNGEST_SIGNING_KEY: z.string().min(1),
-  OPENAI_API_KEY: z.string().min(1),
+  INNGEST_EVENT_KEY: z.string().min(1).optional(),
+  INNGEST_SIGNING_KEY: z.string().min(1).optional(),
+  OPENAI_API_KEY: z.string().min(1).optional(),
   TAVILY_API_KEY: z.string().min(1).optional(),
   EXA_API_KEY: z.string().min(1).optional()
 });
@@ -19,7 +21,7 @@ export function getEnv(): AppEnv {
   }
 
   cachedEnv = envSchema.parse({
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL: process.env.DATABASE_URL ?? defaultDatabaseUrl,
     INNGEST_EVENT_KEY: process.env.INNGEST_EVENT_KEY,
     INNGEST_SIGNING_KEY: process.env.INNGEST_SIGNING_KEY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,

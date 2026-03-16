@@ -106,6 +106,10 @@ describe("briefing graph", () => {
     });
     expect(firstRun.deduped).toBe(false);
     expect(firstRun.linkedDecision?.id).toBe("decision_1");
+    expect(firstRun.linkedDecision?.workflowThreadId).toBe(
+      "review-feedback:decision:decision_1"
+    );
+    expect(firstRun.linkedDecision?.workflowStatus).toBe("awaiting_owner");
 
     const secondRun = await graph.invoke(input);
 

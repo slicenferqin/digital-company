@@ -54,6 +54,11 @@ export async function getDecisionById(decisionId: string, database = getDatabase
   return row ? mapDecision(row) : null;
 }
 
+export async function listDecisionsForCycle(cycleId: string, database = getDatabase()) {
+  const rows = await database.select().from(decisions).where(eq(decisions.cycleId, cycleId));
+  return rows.map(mapDecision);
+}
+
 export async function updateDecision(input: UpdateDecisionInput, database = getDatabase()) {
   const [row] = await database
     .update(decisions)

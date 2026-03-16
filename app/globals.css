@@ -263,8 +263,12 @@ button {
 
 .primaryButton,
 .secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
   padding: 12px 20px;
+  text-decoration: none;
 }
 
 .primaryButton {
@@ -310,6 +314,65 @@ button {
   padding: 24px;
   display: grid;
   gap: 20px;
+}
+
+.workbenchStack {
+  display: grid;
+  gap: 20px;
+}
+
+.workbenchPanel {
+  display: grid;
+  gap: 16px;
+}
+
+.workbenchHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.factGroup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.factGroup span {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.sectionHint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.emptyState {
+  display: grid;
+  gap: 16px;
+  max-width: 760px;
+}
+
+.emptyState h3,
+.emptyState p {
+  margin: 0;
 }
 
 .demoWorkspace {
@@ -431,6 +494,60 @@ button {
   font-size: 15px;
 }
 
+.decisionActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.decisionButton {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.decisionButton:disabled {
+  opacity: 0.6;
+}
+
+.approveButton {
+  border-color: rgba(22, 163, 74, 0.18);
+  color: #166534;
+}
+
+.reviseButton {
+  border-color: rgba(217, 119, 6, 0.18);
+  color: #b45309;
+}
+
+.rejectButton {
+  border-color: rgba(220, 38, 38, 0.18);
+  color: #b91c1c;
+}
+
+.artifactFeedbackBox {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.artifactFeedbackInput {
+  width: 100%;
+  min-height: 76px;
+  resize: vertical;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.6;
+}
+
 @media (max-width: 1100px) {
   .shell {
     grid-template-columns: 1fr;
@@ -438,6 +555,12 @@ button {
 
   .hero,
   .contentGrid {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .metricGrid,
+  .workbenchHeader {
     grid-template-columns: 1fr;
     flex-direction: column;
   }

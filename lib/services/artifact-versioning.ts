@@ -98,7 +98,7 @@ export async function applyDraftReviewResult(
     bodyMarkdown: reviewResult.revisedBodyMarkdown ?? artifact.bodyMarkdown ?? undefined,
     storageUri: artifact.storageUri ?? undefined,
     version: artifact.version + 1,
-    status: "approved",
+    status: "draft",
     metadata: {
       ...artifact.metadata,
       versionLineage: {

@@ -22,18 +22,41 @@ export function buildDecisionWorkflowThreadId(decisionId: string) {
   return `review-feedback:decision:${decisionId}`;
 }
 
+function mapOwnerChoiceToDecisionUpdate(ownerChoice: OwnerChoice) {
+  if (ownerChoice.action === "approve") {
+    return {
+      status: "approved" as const,
+      resolution: ownerChoice.note ?? "approved",
+      resolutionPayload: {
+        ownerAction: "approve"
+      }
+    };
+  }
+
+  if (ownerChoice.action === "revise") {
+    return {
+      status: "rejected" as const,
+      resolution: ownerChoice.note ?? "revise_requested",
+      resolutionPayload: {
+        ownerAction: "revise"
+      }
+    };
+  }
+
+  return {
+    status: "rejected" as const,
+    resolution: ownerChoice.note ?? "rejected",
+    resolutionPayload: {
+      ownerAction: "reject"
+    }
+  };
+}
+
 export async function initializeDecisionReviewWorkflow(input: {
   decisionId: string;
   teamId: string;
 }, dependencies: DecisionWorkflowDependencies = defaultDependencies) {
   const threadId = buildDecisionWorkflowThreadId(input.decisionId);
-
-  await dependencies.updateDecision({
-    decisionId: input.decisionId,
-    workflowThreadId: threadId,
-    workflowName: REVIEW_FEEDBACK_WORKFLOW_NAME,
-    workflowStatus: "awaiting_owner"
-  });
 
   const workflow = await dependencies.startReviewFeedbackGraph(
     {
@@ -42,6 +65,13 @@ export async function initializeDecisionReviewWorkflow(input: {
     },
     threadId
   );
+
+  await dependencies.updateDecision({
+    decisionId: input.decisionId,
+    workflowThreadId: threadId,
+    workflowName: REVIEW_FEEDBACK_WORKFLOW_NAME,
+    workflowStatus: "awaiting_owner"
+  });
 
   return {
     threadId,
@@ -63,8 +93,20 @@ export async function resumeDecisionReviewWorkflow(input: {
     throw new Error(`Decision has no workflow thread id: ${input.decisionId}`);
   }
 
+  const previousDecisionState = {
+    status: decision.status,
+    resolution: decision.resolution,
+    resolutionPayload: decision.resolutionPayload,
+    decidedAt: decision.decidedAt
+  };
+  const ownerDecisionUpdate = mapOwnerChoiceToDecisionUpdate(input.ownerChoice);
+
   await dependencies.updateDecision({
     decisionId: input.decisionId,
+    status: ownerDecisionUpdate.status,
+    resolution: ownerDecisionUpdate.resolution,
+    resolutionPayload: ownerDecisionUpdate.resolutionPayload,
+    decidedAt: new Date(),
     workflowStatus: "resumed"
   });
 
@@ -86,6 +128,10 @@ export async function resumeDecisionReviewWorkflow(input: {
   } catch (error) {
     await dependencies.updateDecision({
       decisionId: input.decisionId,
+      status: previousDecisionState.status,
+      resolution: previousDecisionState.resolution,
+      resolutionPayload: previousDecisionState.resolutionPayload,
+      decidedAt: previousDecisionState.decidedAt,
       workflowStatus: "failed"
     });
 

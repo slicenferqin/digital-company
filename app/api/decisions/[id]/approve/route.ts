@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { updateDecision } from "@/lib/domain/decision/repository";
 import { resumeDecisionReviewWorkflow } from "@/lib/services/decision-workflow";
 
 const approveRequestSchema = z.object({
@@ -11,20 +10,10 @@ const approveRequestSchema = z.object({
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
-) {
+  ) {
   try {
     const { id } = await params;
     const payload = approveRequestSchema.parse(await request.json());
-
-    const decision = await updateDecision({
-      decisionId: id,
-      status: "approved",
-      resolution: payload.note ?? "approved",
-      resolutionPayload: {
-        ownerAction: "approve"
-      },
-      decidedAt: new Date()
-    });
 
     const workflow = await resumeDecisionReviewWorkflow({
       decisionId: id,
@@ -35,7 +24,7 @@ export async function POST(
     });
 
     return NextResponse.json({
-      decision: workflow.decision ?? decision,
+      decision: workflow.decision,
       workflowState: workflow.workflow.state.values
     });
   } catch (error) {

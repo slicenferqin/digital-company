@@ -1,7 +1,7 @@
 import { defineConfig } from "drizzle-kit";
 
 const databaseUrl =
-  process.env.DATABASE_URL ?? "postgres://postgres:postgres@localhost:5432/digital_company";
+  process.env.DATABASE_URL ?? "postgres://slicenfer@localhost:5432/postgres";
 
 export default defineConfig({
   schema: "./lib/db/schema/index.ts",

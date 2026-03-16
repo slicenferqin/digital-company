@@ -82,7 +82,7 @@ describe("team bootstrap service", () => {
 
     expect(createTeamMock).toHaveBeenCalledTimes(1);
     expect(createRoleMock).toHaveBeenCalledTimes(7);
-    expect(createMemberMock).toHaveBeenCalledTimes(7);
+    expect(createMemberMock).toHaveBeenCalledTimes(8);
     expect(result.team.name).toBe("Acme 内容增长团队");
     expect(result.roles.map((role) => role.name)).toEqual([
       "GM",
@@ -93,7 +93,8 @@ describe("team bootstrap service", () => {
       "Editor",
       "Distribution Operator"
     ]);
-    expect(result.members).toHaveLength(7);
+    expect(result.members).toHaveLength(8);
+    expect(result.members.map((member) => member.name)).toContain("Trend Scout");
     expect(result.profile.sourceMode).toBe("manual");
   });
 
@@ -173,6 +174,6 @@ describe("team bootstrap service", () => {
     expect(result.profile.sourceMode).toBe("reverse_engineered");
     expect(result.profile.sourceUrl).toBe("https://example.com");
     expect(createRoleMock).toHaveBeenCalledTimes(7);
-    expect(createMemberMock).toHaveBeenCalledTimes(7);
+    expect(createMemberMock).toHaveBeenCalledTimes(8);
   });
 });

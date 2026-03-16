@@ -1,14 +1,25 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { z } from "zod";
 
 import { parseTeamBootstrapInput } from "@/lib/services/business-profile";
+import { bootstrapTeamWithInitialCycle } from "@/lib/services/bootstrap-team-with-initial-cycle";
 import { bootstrapTeam } from "@/lib/services/team-bootstrap";
+
+const bootstrapRequestSchema = z
+  .object({
+    seedInitialCycle: z.boolean().optional()
+  })
+  .passthrough();
 
 export async function POST(request: Request) {
   try {
-    const payload = await request.json();
-    const input = parseTeamBootstrapInput(payload);
-    const result = await bootstrapTeam(input);
+    const payload = bootstrapRequestSchema.parse(await request.json());
+    const { seedInitialCycle = true, ...inputPayload } = payload;
+    const input = parseTeamBootstrapInput(inputPayload);
+    const result = seedInitialCycle
+      ? await bootstrapTeamWithInitialCycle(input)
+      : await bootstrapTeam(input);
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {

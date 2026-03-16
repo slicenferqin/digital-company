@@ -82,7 +82,7 @@ export function createReduceBriefingNode(dependencies: BriefingGraphDependencies
       escalationScore >= state.escalationThreshold ||
       state.clusters.some((cluster) => cluster.requiresOwnerDecision);
 
-    const linkedDecision = shouldPromote
+    let linkedDecision = shouldPromote
       ? await dependencies.createDecision({
           teamId: state.teamId,
           cycleId: state.cycleId,
@@ -95,10 +95,17 @@ export function createReduceBriefingNode(dependencies: BriefingGraphDependencies
       : null;
 
     if (linkedDecision) {
-      await dependencies.initializeDecisionReviewWorkflow({
+      const initializedWorkflow = await dependencies.initializeDecisionReviewWorkflow({
         decisionId: linkedDecision.id,
         teamId: linkedDecision.teamId
       });
+
+      linkedDecision = {
+        ...linkedDecision,
+        workflowThreadId: initializedWorkflow.threadId,
+        workflowName: "review-feedback",
+        workflowStatus: "awaiting_owner"
+      };
     }
 
     return {

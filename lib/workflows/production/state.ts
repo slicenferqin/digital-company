@@ -26,6 +26,8 @@ export interface ProductionInput {
   title: string;
   bodyMarkdown: string;
   summary?: string;
+  writingGuidelines?: string[];
+  reviewGuidelines?: string[];
   projectId?: string;
   taskId?: string;
   authorMemberId?: string;
@@ -37,6 +39,8 @@ export interface DraftReviewer {
     artifact: Artifact;
     bodyMarkdown: string;
     summary: string | null;
+    writingGuidelines: string[];
+    reviewGuidelines: string[];
   }): Promise<DraftReviewResult>;
 }
 
@@ -47,6 +51,8 @@ export const ProductionStateAnnotation = Annotation.Root({
   title: Annotation<string>,
   bodyMarkdown: Annotation<string>,
   summary: replaceReducer<string | null>(null),
+  writingGuidelines: replaceArrayReducer<string>(),
+  reviewGuidelines: replaceArrayReducer<string>(),
   projectId: replaceReducer<string | null>(null),
   taskId: replaceReducer<string | null>(null),
   authorMemberId: replaceReducer<string | null>(null),

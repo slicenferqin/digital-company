@@ -20,14 +20,98 @@ describe("cycle planning graph", () => {
 
     const listMembersByTeamId = vi.fn().mockResolvedValue([
       {
-        id: "member_1",
+        id: "member_strategy",
         teamId: "team_1",
-        roleId: "role_gm",
-        name: "GM",
+        roleId: "role_strategy",
+        name: "Strategist",
         personaSummary: null,
         strengths: [],
         weaknesses: [],
-        specialtyTags: [],
+        specialtyTags: ["strategy"],
+        currentLoad: 0,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: "member_research",
+        teamId: "team_1",
+        roleId: "role_research",
+        name: "Researcher",
+        personaSummary: null,
+        strengths: [],
+        weaknesses: [],
+        specialtyTags: ["research"],
+        currentLoad: 0,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: "member_trend",
+        teamId: "team_1",
+        roleId: "role_research",
+        name: "Trend Scout",
+        personaSummary: null,
+        strengths: [],
+        weaknesses: [],
+        specialtyTags: ["research", "trend"],
+        currentLoad: 0,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: "member_writer",
+        teamId: "team_1",
+        roleId: "role_writer",
+        name: "Writer",
+        personaSummary: null,
+        strengths: [],
+        weaknesses: [],
+        specialtyTags: ["writing"],
+        currentLoad: 0,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: "member_editor",
+        teamId: "team_1",
+        roleId: "role_editor",
+        name: "Editor",
+        personaSummary: null,
+        strengths: [],
+        weaknesses: [],
+        specialtyTags: ["editing"],
+        currentLoad: 0,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: "member_cos",
+        teamId: "team_1",
+        roleId: "role_cos",
+        name: "Chief of Staff",
+        personaSummary: null,
+        strengths: [],
+        weaknesses: [],
+        specialtyTags: ["briefing"],
+        currentLoad: 0,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: "member_distribution",
+        teamId: "team_1",
+        roleId: "role_distribution",
+        name: "Distribution Operator",
+        personaSummary: null,
+        strengths: [],
+        weaknesses: [],
+        specialtyTags: ["distribution"],
         currentLoad: 0,
         status: "active",
         createdAt: new Date(),
@@ -136,9 +220,22 @@ describe("cycle planning graph", () => {
     expect(createTask).toHaveBeenCalledWith(
       expect.objectContaining({
         taskType: "preference_calibration",
+        assignedMemberId: "member_editor",
         inputContext: expect.objectContaining({
           writingGuidelines: expect.arrayContaining(["语气需要更克制", "首段先给结论"])
         })
+      })
+    );
+    expect(createTask).toHaveBeenCalledWith(
+      expect.objectContaining({
+        taskType: "topic_brief",
+        assignedMemberId: "member_trend"
+      })
+    );
+    expect(createTask).toHaveBeenCalledWith(
+      expect.objectContaining({
+        taskType: "article_draft",
+        assignedMemberId: "member_writer"
       })
     );
   });

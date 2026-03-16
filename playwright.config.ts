@@ -8,7 +8,7 @@ export default defineConfig({
     baseURL: "http://127.0.0.1:3000"
   },
   webServer: {
-    command: "pnpm dev",
+    command: "pnpm db:migrate && pnpm dev",
     url: "http://127.0.0.1:3000",
     reuseExistingServer: true,
     timeout: 120000

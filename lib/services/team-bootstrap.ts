@@ -29,7 +29,7 @@ const defaultDependencies: BootstrapDependencies = {
 
 type FoundingRoleBlueprint = {
   role: Omit<CreateRoleInput, "teamId">;
-  member: Omit<CreateMemberInput, "teamId" | "roleId">;
+  members: Array<Omit<CreateMemberInput, "teamId" | "roleId">>;
 };
 
 const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
@@ -42,13 +42,15 @@ const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
       headcountLimit: 1,
       sortOrder: 10
     },
-    member: {
-      name: "GM",
-      personaSummary: "对业务目标负责，负责把内容增长目标拆成可执行方向。",
-      strengths: ["目标拆解", "优先级判断"],
-      weaknesses: ["不直接产出最终内容"],
-      specialtyTags: ["management", "execution"]
-    }
+    members: [
+      {
+        name: "GM",
+        personaSummary: "对业务目标负责，负责把内容增长目标拆成可执行方向。",
+        strengths: ["目标拆解", "优先级判断"],
+        weaknesses: ["不直接产出最终内容"],
+        specialtyTags: ["management", "execution"]
+      }
+    ]
   },
   {
     role: {
@@ -59,13 +61,15 @@ const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
       headcountLimit: 1,
       sortOrder: 20
     },
-    member: {
-      name: "Chief of Staff",
-      personaSummary: "承上启下，把团队过程翻译成老板能快速消费的管理材料。",
-      strengths: ["信息压缩", "风险升级"],
-      weaknesses: ["不负责深度研究"],
-      specialtyTags: ["briefing", "coordination"]
-    }
+    members: [
+      {
+        name: "Chief of Staff",
+        personaSummary: "承上启下，把团队过程翻译成老板能快速消费的管理材料。",
+        strengths: ["信息压缩", "风险升级"],
+        weaknesses: ["不负责深度研究"],
+        specialtyTags: ["briefing", "coordination"]
+      }
+    ]
   },
   {
     role: {
@@ -76,13 +80,15 @@ const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
       headcountLimit: 1,
       sortOrder: 30
     },
-    member: {
-      name: "Strategist",
-      personaSummary: "把业务目标翻译成内容策略与渠道重点。",
-      strengths: ["策略规划", "内容选题"],
-      weaknesses: ["不做终稿抛光"],
-      specialtyTags: ["strategy", "topic"]
-    }
+    members: [
+      {
+        name: "Strategist",
+        personaSummary: "把业务目标翻译成内容策略与渠道重点。",
+        strengths: ["策略规划", "内容选题"],
+        weaknesses: ["不做终稿抛光"],
+        specialtyTags: ["strategy", "topic"]
+      }
+    ]
   },
   {
     role: {
@@ -90,16 +96,25 @@ const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
       department: "research",
       responsibilities: ["研究用户问题", "整理行业信息", "沉淀研究摘要"],
       approvalScope: [],
-      headcountLimit: 1,
+      headcountLimit: 2,
       sortOrder: 40
     },
-    member: {
-      name: "Researcher",
-      personaSummary: "持续收集可支撑选题和写作的事实、素材与洞察。",
-      strengths: ["资料收集", "结构化摘要"],
-      weaknesses: ["不对最终品牌表达负责"],
-      specialtyTags: ["research", "insight"]
-    }
+    members: [
+      {
+        name: "Researcher",
+        personaSummary: "持续收集可支撑选题和写作的事实、素材与洞察。",
+        strengths: ["资料收集", "结构化摘要"],
+        weaknesses: ["不对最终品牌表达负责"],
+        specialtyTags: ["research", "insight"]
+      },
+      {
+        name: "Trend Scout",
+        personaSummary: "补充新近趋势、渠道话题与竞争观察，为研究提供第二视角。",
+        strengths: ["趋势扫描", "热点提炼"],
+        weaknesses: ["不负责沉淀最终研究文档"],
+        specialtyTags: ["research", "trend"]
+      }
+    ]
   },
   {
     role: {
@@ -110,13 +125,15 @@ const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
       headcountLimit: 1,
       sortOrder: 50
     },
-    member: {
-      name: "Writer",
-      personaSummary: "把 brief 和研究结果转成可审核的内容草稿。",
-      strengths: ["起草", "结构组织"],
-      weaknesses: ["不负责最终审核标准"],
-      specialtyTags: ["writing", "draft"]
-    }
+    members: [
+      {
+        name: "Writer",
+        personaSummary: "把 brief 和研究结果转成可审核的内容草稿。",
+        strengths: ["起草", "结构组织"],
+        weaknesses: ["不负责最终审核标准"],
+        specialtyTags: ["writing", "draft"]
+      }
+    ]
   },
   {
     role: {
@@ -127,13 +144,15 @@ const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
       headcountLimit: 1,
       sortOrder: 60
     },
-    member: {
-      name: "Editor",
-      personaSummary: "为交付把关，确保内容质量、品牌边界与可发布性。",
-      strengths: ["质量控制", "风格校准"],
-      weaknesses: ["不负责前期研究扩展"],
-      specialtyTags: ["editing", "review"]
-    }
+    members: [
+      {
+        name: "Editor",
+        personaSummary: "为交付把关，确保内容质量、品牌边界与可发布性。",
+        strengths: ["质量控制", "风格校准"],
+        weaknesses: ["不负责前期研究扩展"],
+        specialtyTags: ["editing", "review"]
+      }
+    ]
   },
   {
     role: {
@@ -144,13 +163,15 @@ const foundingRoleBlueprints: FoundingRoleBlueprint[] = [
       headcountLimit: 1,
       sortOrder: 70
     },
-    member: {
-      name: "Distribution Operator",
-      personaSummary: "把通过审核的内容进一步适配到渠道分发动作。",
-      strengths: ["渠道适配", "执行清单"],
-      weaknesses: ["不负责主线策略"],
-      specialtyTags: ["distribution", "ops"]
-    }
+    members: [
+      {
+        name: "Distribution Operator",
+        personaSummary: "把通过审核的内容进一步适配到渠道分发动作。",
+        strengths: ["渠道适配", "执行清单"],
+        weaknesses: ["不负责主线策略"],
+        specialtyTags: ["distribution", "ops"]
+      }
+    ]
   }
 ];
 
@@ -169,7 +190,7 @@ function buildRoleInput(teamId: string, role: FoundingRoleBlueprint["role"]): Cr
 function buildMemberInput(
   teamId: string,
   roleId: string,
-  member: FoundingRoleBlueprint["member"]
+  member: FoundingRoleBlueprint["members"][number]
 ): CreateMemberInput {
   return {
     teamId,
@@ -214,10 +235,12 @@ export async function bootstrapTeam(
     const role = await dependencies.createRole(buildRoleInput(team.id, blueprint.role));
     createdRoles.push(role);
 
-    const member = await dependencies.createMember(
-      buildMemberInput(team.id, role.id, blueprint.member)
-    );
-    createdMembers.push(member);
+    for (const memberBlueprint of blueprint.members) {
+      const member = await dependencies.createMember(
+        buildMemberInput(team.id, role.id, memberBlueprint)
+      );
+      createdMembers.push(member);
+    }
   }
 
   return {

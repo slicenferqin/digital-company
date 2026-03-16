@@ -1,30 +1,26 @@
 import Link from "next/link";
 
-const priorities = [
-  "先看秘书长简报，确认本周期真正需要你介入的两件事。",
-  "再处理一条主线决策，让团队继续推进而不是卡在过程里。",
-  "最后看已经成形的资产，不先看底层 agent 过程。"
-];
+import { WorkbenchOverviewClient } from "./workbench-overview-client";
 
-const outputs = [
-  {
-    title: "本周内容策略卡",
-    detail: "聚焦老板视角的 AI 销售自动化主题，进入第二周期继续优化。"
-  },
-  {
-    title: "旗舰长文初稿",
-    detail: "已有主稿版本，等待老板确认角度与品牌边界。"
-  },
+const bossInterfaces = [
   {
     title: "秘书长简报",
-    detail: "团队内部争议、风险升级和建议动作已压缩成可判断材料。"
+    detail: "把内部协作压缩成老板可判断的摘要，不把注意力浪费在 agent 过程。"
+  },
+  {
+    title: "待决策事项",
+    detail: "只在需要拍板时打断老板，让团队继续运转而不是卡在编排壳子里。"
+  },
+  {
+    title: "交付资产",
+    detail: "首页先展示内容与质量状态，证明团队在持续交付，而不是只会跑流程。"
   }
 ];
 
 const signals = [
-  "第二周期开始，老板重复说明业务背景的频率应下降。",
-  "高价值内容应逐步减少返工，而不是只增加产出量。",
-  "系统目标是经营团队，不是运行一次定时工作流。"
+  "第二周期开始，老板重复解释业务背景的频率应下降。",
+  "反馈要改变下一周期的任务结构、审核规则或审批策略。",
+  "首页读取真实团队数据，不把内部技术 demo 当产品成立证据。"
 ];
 
 export default function HomePage() {
@@ -40,18 +36,18 @@ export default function HomePage() {
         </div>
 
         <nav className="nav">
-          <button className="navItem active">
+          <Link className="navItem active" href="#workbench-overview">
             <strong>团队总览</strong>
             <span>看本周期在推进什么，以及老板下一步该做什么。</span>
-          </button>
-          <button className="navItem">
+          </Link>
+          <Link className="navItem" href="#briefing-panel">
             <strong>秘书长简报</strong>
             <span>把复杂过程压缩成可判断的材料。</span>
-          </button>
-          <button className="navItem">
+          </Link>
+          <Link className="navItem" href="#artifact-panel">
             <strong>交付物中心</strong>
             <span>先看业务资产，不先看 agent 过程。</span>
-          </button>
+          </Link>
         </nav>
 
         <section className="sideCard">
@@ -76,36 +72,28 @@ export default function HomePage() {
       <section className="workspace">
         <header className="hero">
           <div>
-            <p className="eyebrow">Task 1 Skeleton</p>
-            <h2>不是创建一家公司，而是接手一支会持续成长的小团队。</h2>
+            <p className="eyebrow">Boss Workbench</p>
+            <h2>接手一支持续运转的数字内容增长团队，而不是点一次按钮生成临时 team。</h2>
             <p className="lede">
-              这个原型基线沿用 balanced 版的低心智负担布局，但内容对象切换成
-              `团队 / 周期 / 资产 / 简报 / 决策`，作为后续真实工作台的母版。
+              首页现在以 `团队 / 周期 / 简报 / 决策 / 资产` 为对象组织信息。
+              主路径优先暴露真实工作台聚合数据，内部 Phase 0 demo 只保留在独立验证页。
             </p>
           </div>
           <div className="heroActions">
-            <button className="primaryButton">查看本周期简报</button>
-            <button className="secondaryButton">查看最新资产</button>
+            <Link className="primaryButton" href="#workbench-overview">
+              进入真实工作台
+            </Link>
+            <Link className="secondaryButton" href="/demo/phase0">
+              查看内部 Demo
+            </Link>
           </div>
         </header>
 
         <div className="contentGrid">
           <section className="panel">
-            <h3>今天只看这三件事</h3>
-            <ul className="numberedList">
-              {priorities.map((item, index) => (
-                <li key={item}>
-                  <span>{index + 1}</span>
-                  <p>{item}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="panel">
-            <h3>本周期已形成的交付</h3>
+            <h3>老板接口</h3>
             <div className="cardStack">
-              {outputs.map((item) => (
+              {bossInterfaces.map((item) => (
                 <article className="miniCard" key={item.title}>
                   <strong>{item.title}</strong>
                   <p>{item.detail}</p>
@@ -126,11 +114,13 @@ export default function HomePage() {
           </section>
         </div>
 
+        <WorkbenchOverviewClient />
+
         <section className="panel internalNote">
           <h3>当前状态说明</h3>
           <p>
-            这里仍然是老板工作台骨架，不把内部技术 demo 当作产品主路径。Phase 0
-            演示被单独放到内部验证页，避免把技术顺滑路径误当成“产品已成立”。
+            真实首页优先读取数据库聚合后的团队概览。内部 Phase 0 演示继续保留为验证路径，
+            但不再承担“产品已成立”的叙事职责。
           </p>
           <Link className="textLink" href="/demo/phase0">
             查看内部 Phase 0 demo 路径

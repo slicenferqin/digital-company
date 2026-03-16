@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   buildDecisionWorkflowThreadId,
+  initializeDecisionReviewWorkflow,
   resumeDecisionReviewWorkflow
 } from "../../lib/services/decision-workflow";
 
@@ -70,5 +71,32 @@ describe("decision workflow service", () => {
       }
     );
     expect(result.workflow.state.values.finalDecision.id).toBe("decision_1");
+  });
+
+  it("starts the workflow before persisting the workflow linkage", async () => {
+    const startReviewFeedbackGraph = vi.fn().mockResolvedValue({
+      state: {
+        values: {}
+      }
+    });
+    const updateDecision = vi.fn().mockResolvedValue({});
+
+    const result = await initializeDecisionReviewWorkflow(
+      {
+        decisionId: "decision_1",
+        teamId: "team_1"
+      },
+      {
+        getDecisionById: vi.fn(),
+        updateDecision,
+        startReviewFeedbackGraph,
+        resumeReviewFeedbackGraph: vi.fn()
+      } as never
+    );
+
+    expect(startReviewFeedbackGraph.mock.invocationCallOrder[0]).toBeLessThan(
+      updateDecision.mock.invocationCallOrder[0]
+    );
+    expect(result.threadId).toBe("review-feedback:decision:decision_1");
   });
 });

@@ -3,7 +3,16 @@ import { eq } from "drizzle-orm";
 import { getDatabase } from "@/lib/db/client";
 import { cycles, projects, tasks } from "@/lib/db/schema";
 
-import type { CreateCycleInput, CreateProjectInput, CreateTaskInput, Cycle, Project, Task } from "./types";
+import type {
+  CreateCycleInput,
+  CreateProjectInput,
+  CreateTaskInput,
+  Cycle,
+  CycleStatus,
+  Project,
+  Task,
+  TaskStatus
+} from "./types";
 
 function mapCycle(row: typeof cycles.$inferSelect): Cycle {
   return {
@@ -76,6 +85,11 @@ export async function createCycle(input: CreateCycleInput, database = getDatabas
   return mapCycle(row);
 }
 
+export async function getCycleById(cycleId: string, database = getDatabase()) {
+  const [row] = await database.select().from(cycles).where(eq(cycles.id, cycleId)).limit(1);
+  return row ? mapCycle(row) : null;
+}
+
 export async function createProject(input: CreateProjectInput, database = getDatabase()) {
   const [row] = await database
     .insert(projects)
@@ -120,4 +134,48 @@ export async function createTask(input: CreateTaskInput, database = getDatabase(
 export async function listTasksForCycle(cycleId: string, database = getDatabase()) {
   const rows = await database.select().from(tasks).where(eq(tasks.cycleId, cycleId));
   return rows.map(mapTask);
+}
+
+export async function updateCycleStatus(
+  input: {
+    cycleId: string;
+    status: CycleStatus;
+  },
+  database = getDatabase()
+) {
+  const [row] = await database
+    .update(cycles)
+    .set({
+      status: input.status,
+      updatedAt: new Date()
+    })
+    .where(eq(cycles.id, input.cycleId))
+    .returning();
+
+  return row ? mapCycle(row) : null;
+}
+
+export async function updateTaskStatus(
+  input: {
+    taskId: string;
+    status: TaskStatus;
+    blockedReason?: string | null;
+    startedAt?: Date | null;
+    completedAt?: Date | null;
+  },
+  database = getDatabase()
+) {
+  const [row] = await database
+    .update(tasks)
+    .set({
+      status: input.status,
+      blockedReason: input.blockedReason,
+      startedAt: input.startedAt ?? undefined,
+      completedAt: input.completedAt ?? undefined,
+      updatedAt: new Date()
+    })
+    .where(eq(tasks.id, input.taskId))
+    .returning();
+
+  return row ? mapTask(row) : null;
 }
